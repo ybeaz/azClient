@@ -1,6 +1,6 @@
 
-// import * as actions from './DataLayer/actions/index'
-// import store from './DataLayer/store'
+import * as actions from './DataLayer/actions/index'
+import store from './DataLayer/store'
 import * as serviceFunc from './Shared/serviceFunc'
 
 
