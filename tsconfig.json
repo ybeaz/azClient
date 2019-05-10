@@ -17,6 +17,7 @@
     "types": [
       "node"
     ],
+    "downlevelIteration": true,
   },
   "exclude": [
     "./node_modules/**/*"

@@ -30,6 +30,34 @@ export interface Payload {
   readonly href?: string,
 }
 
+export interface Store {
+  actionLog: object[],
+  userFootprint: {
+    topics?: string[];
+    actions?: string[];
+    target?: {};
+  },
+}
+
+export interface UserFootprint {
+  utAnltSid: string,
+  topics?: {}[],
+  actions?: {}[],
+  target?: {}[],
+  inception?: string,
+    /* 'registrationQuick', 'registrationFooter', 'registrationNavBar',
+        'searchButtonFirst', 'searchButtonSecond', 'catalogCategory', 'userProfile'
+    */
+  searchPhrase?: string,
+  searchCategory?: string[],
+  searchMedia?: string[],
+  catalogCategory?: string,
+  userPrifile?: string,
+  email?: string,
+  role?: string[],
+  msg?: string,
+}
+
 export interface ModeProdDev {
   readonly checkEnterEmail?: boolean,
   readonly checkSelectRole?: boolean,
