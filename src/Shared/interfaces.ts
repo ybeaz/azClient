@@ -34,8 +34,8 @@ export interface Store {
   actionLog: object[],
   userFootprint: {
     utAnltSid?: string;
-    initData?: any[] | [];
-    inpData?: any[] | [];
+    initData?: {}[] | [];
+    inpData?: {}[] | [];
     topics?: string[] | [];
     actions?: string[] | [];
     target?: any[] | [];

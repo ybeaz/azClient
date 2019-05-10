@@ -27,7 +27,7 @@ if (utAnltSid === undefined) {
 const { width, height } = serviceFunc.mediaSizeCrossBrowser(global)
 const { referrer } = document
 const target: {}[] = [{ level: 0, name: 'start' }] // [JSON.stringify({ level: 0, name: 'start' })]
-const initData: {} = { width, height, search, pathname, hostname, href, referrer }
+const initData: {}[] = [{ width, height, search, pathname, hostname, href, referrer }]
 const data: {} = { endpoint, optGet, utAnltSid, target, initData }
 store.dispatch(actions.UPDATE_USER_FOOTPRINT(data))
 setTimeout(
@@ -35,7 +35,7 @@ setTimeout(
     const payload: object = data
     store.dispatch(actions.getActionAsync('START_USER_SESSION', 'REQUEST', payload))
     const storeSlip: object = store.getState()
-    console.info('index->start session [0] ', { storeSlip, data })
+    console.info('index->start session [0] ', { payload, storeSlip, data })
   },
   50,
 )
