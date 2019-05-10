@@ -4,8 +4,10 @@ import * as Interfaces from '../../Shared/interfaces'
 const userFootprint: any = (state: object = {}, action: Interfaces.Action): object => {
 
   let stateNext: Interfaces.UserFootprint = {
+    utAnltSid: '',
     topics: [],
     actions: [],
+    target: [],
   }
 
   switch (action.type) {

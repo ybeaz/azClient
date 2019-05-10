@@ -91,7 +91,8 @@ const array_unique: Function = (data: any[]): any[] => {
  * @description Function to filter array (analogy of php array_filter)
  */
 const array_filter: Function = (data: any): any => {
-  return data.filter((item: any) => JSON.stringify(item) !== JSON.stringify([])
+
+  return data.filter((item: any) => JSON.stringify(item) !== JSON.stringify([]))
 }
 
 /**

@@ -59,8 +59,8 @@ setInterval(() => {
     // console.info('index.js', { topic })
 
     const { topics: record } = store.getState().userFootprint
-    const dataInp: string[] = [topic]
-    const topicsNext: string[] = serviceFunc.getArrToSave(record, dataInp, 'add', '')
+    const topics: string[] = [topic]
+    const topicsNext: string[] = serviceFunc.getArrToSave(record, topics, 'add', '')
     store.dispatch(actions.UPDATE_USER_FOOTPRINT({ topics: topicsNext }))
 
     /*

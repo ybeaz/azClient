@@ -33,9 +33,12 @@ export interface Payload {
 export interface Store {
   actionLog: object[],
   userFootprint: {
-    topics?: string[];
-    actions?: string[];
-    target?: {};
+    utAnltSid?: string;
+    initData?: any[] | [];
+    inpData?: any[] | [];
+    topics?: string[] | [];
+    actions?: string[] | [];
+    target?: any[] | [];
   },
 }
 
