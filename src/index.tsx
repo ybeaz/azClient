@@ -129,8 +129,8 @@ setTimeout(() => {
 /**
  * @description Block for writing data into database
 */
-setInterval(() => {
-// setTimeout(() => {
+// setInterval(() => {
+setTimeout(() => {
     const reduxStore: Interfaces.Store = store.getState()
     const utAnltSidTemp: string = reduxStore.userFootprint.utAnltSid
     const topicsTemp: {}[] = reduxStore.userFootprint.topics
