@@ -1,4 +1,32 @@
 
+/**
+ * @description Function to filter the first object of the object group with prop in an array of objects
+ */
+export const filterArrObjFirst: Function = (arrObj: {}[], prop: string): any => {
+
+  let arrObjNext: {}[] = []
+
+  for (const obj of arrObj) {
+    const propName: string = obj[prop]
+    if (arrObjNext.every((item: {}) => !item[propName])) {
+      console.info('serviceFunc->filterArrObjFirst', { 'obj[prop]': obj[prop], obj, prop, arrObj })
+
+      const eventTypeArr: string[] = obj[prop]
+        .replace(/^(utAzAction_)([\S]*?)$/gim, '$2')
+        .split('_')
+      const [eventType, eventName, eventLevel] = eventTypeArr
+      arrObjNext.push({ ...obj, type: eventType, name: eventName, level: eventLevel, [propName]: true })
+    }
+  }
+  /*
+  arrObjNext = arrObjNext.map((item: any) => {
+    const { type, name, level, val } = item
+
+    return { type, name, level, val }
+  })
+  */
+  return arrObjNext
+}
 
 /**
  * @description Function to serialize object or array for get request
@@ -116,7 +144,8 @@ const array_filter: Function = (data: any): any => {
 /**
  * @description Function to get array to save covering various cases
  */
-export const getArrToSave: Function = (record, dataInp, caseOption, target): any => {
+export const getArrToSave: Function =
+  (record, dataInp, caseOption, target, prop): any => {
   // console.info('getArrToSave [0]', { record, dataInp, caseOption, target })
   const record0 = record && record[0] ? record[0] : ''
   const dataInp0 = dataInp && dataInp[0] ? dataInp[0] : ''
@@ -141,6 +170,9 @@ export const getArrToSave: Function = (record, dataInp, caseOption, target): any
       // console.info('getArrToSave [7]', { dataNext })
       dataNext = array_filter(dataNext)
       // console.info('getArrToSave [9]', { dataNext })
+      if (prop && prop !== '') {
+        dataNext = filterArrObjFirst(dataNext, prop)
+      }
     }
   }
 

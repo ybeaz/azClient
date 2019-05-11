@@ -8,9 +8,8 @@ import * as serviceFunc from './Shared/serviceFunc'
 /**
  * @description Block for defining endpoint (dev, prod mode)
  */
-  const { href, hostname, pathname, search } = location
-  const endpoint = serviceFunc.getEndpoint(location)
-  // console.info('index.js [1]', { endpoint, location })
+const { href, hostname, pathname, search } = location
+const endpoint: string = serviceFunc.getEndpoint(location)
 
 /**
  * @description Block for starting a session and collecting an initial data
@@ -60,7 +59,7 @@ setInterval(() => {
 
     const { topics: record } = store.getState().userFootprint
     const topics: string[] = [topic]
-    const topicsNext: string[] = serviceFunc.getArrToSave(record, topics, 'add', '')
+    const topicsNext: string[] = serviceFunc.getArrToSave(record, topics, 'add', '', '')
     store.dispatch(actions.UPDATE_USER_FOOTPRINT({ topics: topicsNext }))
 
     /*
@@ -78,27 +77,25 @@ setInterval(() => {
 setTimeout(() => {
 
   const watchActionCallBack: Function = (props: any): void => {
-    const { event, eventType, eventName, eventLevelNext, actionElem } = props
+    const { event, eventType, eventName, eventLevelNext, eventClass, actionElem } = props
     const { localName, type } = actionElem
-    const { actions: record, target: azTarget } = store.getState().userFootprint
+    const { actions: actionsPrev, inpData: inpDataPrev, target: targetPrev } = store.getState().userFootprint
 
     // Block for actions
     let actionsNext: {}[] = [{ type: eventType, name: eventName }] // [dataInpStr]
-    actionsNext = serviceFunc.getArrToSave(record, actionsNext, 'add', '')
+    actionsNext = serviceFunc.getArrToSave(actionsPrev, actionsNext, 'add', '', '')
 
-    /* *******************************************************
-    // TO DO: IMPLEMENT SOMETHING LIKE 'Block for actions'
-    ******************************************************** */
     // Block for inpData
     let val: string | number = event.target.value
     if (localName === 'input' && type === 'checkbox') {
       val = event.target.checked
     }
-    const inpData = [{ tag: localName, val }]
-    // console.info('index.js Actions [5]', { val, localName, type, eventType, azTarget, target: event.target, actionElem })
+    let inpDataNext: {}[] = [{ eventClass, tag: localName, val }]
+    inpDataNext = serviceFunc.getArrToSave(inpDataPrev, inpDataNext, 'add', '', 'eventClass')
+    // console.info('index.js Actions [5]', { val, localName, type, eventType, target: event.target, actionElem })
 
     // Block for target
-    const { level } = azTarget[0] // JSON.parse(target[0])
+    const { level } = targetPrev[0] // JSON.parse(target[0])
     const eventLevel: number = level ? level : 0
     // console.info('index.js Actions [5]', { eventLevelNext, eventLevel, level, parse: JSON.parse(target[0] })
     if (eventLevelNext > eventLevel) {
@@ -110,30 +107,33 @@ setTimeout(() => {
       store.dispatch(actions.UPDATE_USER_FOOTPRINT({ target: targetNext }))
     }
 
-    store.dispatch(actions.UPDATE_USER_FOOTPRINT({ actions: actionsNext, inpData }))
+    store.dispatch(actions.UPDATE_USER_FOOTPRINT({ actions: actionsNext, inpData: inpDataNext }))
 
-    /**/
+    /*
     setTimeout(() => {
       const { actions: recordNext } = store.getState().userFootprint
-      console.info('index.js Actions [10]', { userFootprint: store.getState(), actionsNext, record })
+      console.info('index.js Actions [10]', { userFootprint: store.getState(), inpDataNext, actionsNext })
     }, 250)
-    
+    */
   }
 
   // For actions collecting
   const actionElems: any = document.querySelectorAll('[class*="utAzAction_"]')
   const actionArr: any[] = []
   for (let i = 0; i < actionElems.length; i += 1) {
-    const eventTypeClass: string = actionElems[i].className
+    const eventClass: string = actionElems[i].className
       .replace(/^([\s\S]*?)(utAzAction_[\S]*?)($|\s[\s\S]*?)$/gim, '$2')
-    const eventTypeArr: string[] = eventTypeClass.replace(/^(utAzAction_)([\S]*?)$/gim, '$2')
+    const eventTypeArr: string[] = eventClass.replace(/^(utAzAction_)([\S]*?)$/gim, '$2')
       .split('_')
 
     const [eventType, eventName, eventLevel] = eventTypeArr
-    actionArr.push({ eventTypeClass, eventType, eventName, eventLevel })
+    actionArr.push({ eventClass, eventType, eventName, eventLevel })
     const eventLevelNext: number = eventLevel ? parseInt(eventLevel, 10) : 0
     actionElems[i].addEventListener(eventType, (event: Event) => {
-      const props: any = { event, eventType, eventName, eventLevelNext, actionElem: actionElems[i] }
+      const props: any = {
+        event, eventType, eventName, eventLevelNext,
+        eventClass, actionElem: actionElems[i],
+    }
 
       return watchActionCallBack(props)
     })
@@ -144,21 +144,38 @@ setTimeout(() => {
 
 /**
  * @description Block for writing data into database
-*/
-// setInterval(() => {
-setTimeout(() => {
+ */
+setInterval(() => {
+// setTimeout(() => {
     const reduxStore: Interfaces.Store = store.getState()
-    const utAnltSidTemp: string = reduxStore.userFootprint.utAnltSid
-    const topicsTemp: {}[] = reduxStore.userFootprint.topics
-    const actionsTemp: {}[] = reduxStore.userFootprint.actions
-    const targetTemp: {} = reduxStore.userFootprint.target
+    const {
+      utAnltSid: utAnltSidTemp,
+      topics: topicsTemp,
+      actions: actionsTemp,
+      inpData: inpDataTemp,
+      target: targetTemp,
+    } = reduxStore.userFootprint
+    let {  } = reduxStore.userFootprint
+
+    const inpDataTemp2: any[] = []
+    if (inpDataTemp.length > 0) {
+      for (const item of inpDataTemp) {
+        const { type, name, level, val } = item
+        inpDataTemp2.push({ type, name, level, val })
+      }
+    }
+
     const optPost: string = 'sua'
-    const payload: {} = { endpoint, optPost, utAnltSid: utAnltSidTemp, topics: topicsTemp, actions: actionsTemp, target: targetTemp }
+    const payload: {} = {
+      endpoint, optPost,
+      utAnltSid: utAnltSidTemp, topics: topicsTemp, actions: actionsTemp,
+      inpData: inpDataTemp2, target: targetTemp,
+    }
 
     store.dispatch(actions.getActionAsync('SAVE_USER_VISIT_ACTIONS', 'REQUEST', payload))
-    // console.info('index.js->save fooprint [10]', { payload })
+    // console.info('index.js->save fooprint [10]', { inpData: inpDataTemp, payload })
   },
-  5000,
+  2000,
 )
 
 /*
