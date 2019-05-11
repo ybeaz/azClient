@@ -10,7 +10,7 @@ import * as serviceFunc from './Shared/serviceFunc'
  */
   const { href, hostname, pathname, search } = location
   const endpoint = serviceFunc.getEndpoint(location)
-  console.info('index.js [1]', { endpoint, location })
+  // console.info('index.js [1]', { endpoint, location })
 
 /**
  * @description Block for starting a session and collecting an initial data
@@ -35,7 +35,7 @@ setTimeout(
     const payload: object = data
     store.dispatch(actions.getActionAsync('START_USER_SESSION', 'REQUEST', payload))
     const storeSlip: object = store.getState()
-    console.info('index->start session [0] ', { payload, storeSlip, data })
+    // console.info('index->start session [0] ', { payload, storeSlip, data })
   },
   50,
 )
@@ -77,35 +77,47 @@ setInterval(() => {
  */
 setTimeout(() => {
 
-  const watchActionCallBack: Function = (
-    event: Event, eventType: string,
-    eventNameNext: string, eventLevelNext: number,
-  ): void => {
-    const { actions: record, target } = store.getState().userFootprint
-    // const dataInpStr = JSON.stringify({ type: eventType, name: eventNameNext })
-    const dataInp: {}[] = [{ type: eventType, name: eventNameNext }] // [dataInpStr]
-    const actionsNext: {}[] = serviceFunc.getArrToSave(record, dataInp, 'add', '')
+  const watchActionCallBack: Function = (props: any): void => {
+    const { event, eventType, eventName, eventLevelNext, actionElem } = props
+    const { localName, type } = actionElem
+    const { actions: record, target: azTarget } = store.getState().userFootprint
 
-    const { level } = target[0] // JSON.parse(target[0])
+    // Block for actions
+    let actionsNext: {}[] = [{ type: eventType, name: eventName }] // [dataInpStr]
+    actionsNext = serviceFunc.getArrToSave(record, actionsNext, 'add', '')
+
+    /* *******************************************************
+    // TO DO: IMPLEMENT SOMETHING LIKE 'Block for actions'
+    ******************************************************** */
+    // Block for inpData
+    let val: string | number = event.target.value
+    if (localName === 'input' && type === 'checkbox') {
+      val = event.target.checked
+    }
+    const inpData = [{ tag: localName, val }]
+    // console.info('index.js Actions [5]', { val, localName, type, eventType, azTarget, target: event.target, actionElem })
+
+    // Block for target
+    const { level } = azTarget[0] // JSON.parse(target[0])
     const eventLevel: number = level ? level : 0
     // console.info('index.js Actions [5]', { eventLevelNext, eventLevel, level, parse: JSON.parse(target[0] })
     if (eventLevelNext > eventLevel) {
       const targetNextObj: object = {
         level: eventLevelNext,
-        name: eventNameNext,
+        name: eventName,
       }
       const targetNext: {}[] = [targetNextObj] // [JSON.stringify(targetNextObj)]
       store.dispatch(actions.UPDATE_USER_FOOTPRINT({ target: targetNext }))
     }
 
-    store.dispatch(actions.UPDATE_USER_FOOTPRINT({ actions: actionsNext }))
+    store.dispatch(actions.UPDATE_USER_FOOTPRINT({ actions: actionsNext, inpData }))
 
-    /*
+    /**/
     setTimeout(() => {
       const { actions: recordNext } = store.getState().userFootprint
-      // console.info('index.js Actions [10]', { userFootprint: store.getState(), actionsNext, dataInp, record })
+      console.info('index.js Actions [10]', { userFootprint: store.getState(), actionsNext, record })
     }, 250)
-    */
+    
   }
 
   // For actions collecting
@@ -120,7 +132,11 @@ setTimeout(() => {
     const [eventType, eventName, eventLevel] = eventTypeArr
     actionArr.push({ eventTypeClass, eventType, eventName, eventLevel })
     const eventLevelNext: number = eventLevel ? parseInt(eventLevel, 10) : 0
-    actionElems[i].addEventListener(eventType, (event: Event) => {watchActionCallBack(event, eventType, eventName, eventLevelNext)})
+    actionElems[i].addEventListener(eventType, (event: Event) => {
+      const props: any = { event, eventType, eventName, eventLevelNext, actionElem: actionElems[i] }
+
+      return watchActionCallBack(props)
+    })
   }
 
   // console.info('index.js Actions [0]', { actionArr })

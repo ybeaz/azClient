@@ -1,12 +1,17 @@
 import { combineReducers } from 'redux'
 import * as Interfaces from '../../Shared/interfaces'
 
-const userFootprint: any = (state: object = {}, action: Interfaces.Action): object => {
+const userFootprint: any = (
+  state: Interfaces.UserFootprint = {utAnltSid: ''},
+  action: Interfaces.Action
+): Interfaces.UserFootprint => {
 
   let stateNext: Interfaces.UserFootprint = {
     utAnltSid: '',
+    initData: [],
     topics: [],
     actions: [],
+    inpData: [],
     target: [],
   }
 

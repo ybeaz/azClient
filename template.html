@@ -18,6 +18,10 @@
         console.info('inputText00', Date());
         return;
       }
+      function change00() {
+        console.info('select00', Date());
+        return;
+      }
 
       setTimeout(() => {
         const button01 = document.querySelectorAll('.button');
@@ -50,7 +54,15 @@
     <input class="inputText utAzAction_input_input00" type="text" oninput="inputText00()" />
     <input class="inputText utAzAction_input_input01_2" type="text" />
 
-    <p class="demo utAzTopic_abc_2">utAzTopic_abc_2</p>
+    <select class="utAzAction_change_select00_3" onchange="change00(value)">
+      <option value="volvo">Volvo</option>
+      <option value="saab">Saab</option>
+      <option value="mercedes">Mercedes</option>
+      <option value="audi">Audi</option>
+    </select>
+
+
+    <p class="demo utAzTopic_abc_4" style="cursor: pointer">utAzTopic_abc_4</p>
 
   </body>
 </html>
