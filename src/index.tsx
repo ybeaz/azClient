@@ -2,8 +2,8 @@ import uuidv4 from 'uuid/v4'
 
 import * as actions from './DataLayer/actions/index'
 import store from './DataLayer/store'
-import * as Interfaces from './Shared/interfaces'
 import * as serviceFunc from './Shared/serviceFunc'
+import * as Interfaces from './Shared/interfaces'
 
 /**
  * @description Block for defining endpoint (dev, prod mode)
