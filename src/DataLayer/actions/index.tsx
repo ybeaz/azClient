@@ -25,7 +25,9 @@ export const getActionAsync: any = (type: string, stage: string, data: any): any
 // Template export const : any = (data: any): any => action(actionTypes., data)
 
 export const UPDATE_USER_FOOTPRINT: any = (data: any): any =>  action(actionTypes.UPDATE_USER_FOOTPRINT, data)
+export const DISPATCH_ACTION: any = (data: any): any => action(actionTypes.DISPATCH_ACTION, data)
 
+/*
 export const OPEN_REG_BOTTOM_BODY: any = (data: any): any =>  action(actionTypes.OPEN_REG_BOTTOM_BODY, data)
 export const OPEN_REG_TOP_BODY: any = (data: any): any =>  action(actionTypes.OPEN_REG_TOP_BODY, data)
 export const SELECT_LANGUAGE: any = (data: any): any =>  action(actionTypes.SELECT_LANGUAGE, data)
@@ -48,7 +50,7 @@ export const OPEN_MODAL_REGISTRATION_QUICK: any = (data: any): any => action(act
 export const OPEN_MODAL_REGISTRATION_FOOTER: any = (data: any): any => action(actionTypes.OPEN_MODAL_REGISTRATION_FOOTER, data)
 export const OPEN_MODAL_REGISTRATION_TO_SPEC: any = (data: any): any => action(actionTypes.OPEN_MODAL_REGISTRATION_TO_SPEC, data)
 export const OPEN_MODAL_FAREWELL: any = (data: any): any => action(actionTypes.OPEN_MODAL_FAREWELL, data)
-export const DISPATCH_ACTION: any = (data: any): any => action(actionTypes.DISPATCH_ACTION, data)
 export const UPLOAD_TREE_DATA: any = (data: any): any => action(actionTypes.UPLOAD_TREE_DATA, data)
-// export const SELECTED_PROJECT_TO_MERGE = data => action(actionTypes.SELECTED_PROJECT_TO_MERGE, data)
-// export const UPDATED_NAMECOM_WIT_APPTOPTARGET = data => action(actionTypes.UPDATED_NAMECOM_WIT_APPTOPTARGET, data)
+export const SELECTED_PROJECT_TO_MERGE = data => action(actionTypes.SELECTED_PROJECT_TO_MERGE, data)
+export const UPDATED_NAMECOM_WIT_APPTOPTARGET = data => action(actionTypes.UPDATED_NAMECOM_WIT_APPTOPTARGET, data)
+*/

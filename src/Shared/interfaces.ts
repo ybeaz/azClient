@@ -10,8 +10,10 @@ export interface Payload {
   readonly optGet?: string,
   readonly optPost?: string,
   readonly utAnltSid?: string,
-  readonly target?: string[],
-  readonly topic?: string[],
+  readonly initData?: {}[],
+  readonly eventData?: {}[] | [],
+  readonly topics?: string[] | [],
+  readonly target?: any[] | [],
   readonly role?: string[],
   readonly msg?: string[],
   readonly actionLog?: string[],
@@ -28,6 +30,19 @@ export interface Payload {
   readonly pathname?: string,
   readonly hostname?: string,
   readonly href?: string,
+}
+
+export interface UserFootprint {
+  readonly utAnltSid?: string,
+  readonly initData?: {}[] | [],
+  readonly eventData?: any[] | [],
+  readonly topics?: string[] | [],
+  readonly target?: any[] | [],
+}
+
+export interface Store {
+  actionLog: object[];
+  userFootprint: UserFootprint;
 }
 
 export interface ModeProdDev {

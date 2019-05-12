@@ -3,11 +3,13 @@ import { takeEvery, call } from 'redux-saga/effects'
 import { fetchPost } from '../ComminicationLayer/fetch'
 
 function* getSavedUserVisitActions(payload) {
-  const endpoint = 'https://nd.userto.com/api/apiP2p'
-  // Unused API, but working: const endpoint = 'https://userto.com/api/apiP2p.php'
-  // console.info('getSavedUserVisitActions [0]', JSON.stringify(payload))
+  const { endpoint } = payload
+  const payloadNext = payload
+  delete payloadNext.endpoint
+  delete payloadNext.type
+  // console.info('getSavedUserVisitActions [0]', { payload, 'JSON.stringify(payload)': JSON.stringify(payload) })
   try {
-    const response = yield fetchPost(endpoint, payload)
+    const response = yield fetchPost(endpoint, payloadNext)
 
     const data = yield response.json()
     // console.info('getUserAnalyticsData [7]', { data })

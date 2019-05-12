@@ -1,4 +1,4 @@
-import { devModeTrueFalse } from '../Shared/serviceFunc'
+import * as serviceFunc from '../Shared/serviceFunc'
 
 export const fetchPost: Function = (endpoint: string, payload: any): any => {
   // console.info('fetch.js->fetchPost [5]', { endpointPayload, payload })
@@ -23,13 +23,8 @@ export const fetchPost: Function = (endpoint: string, payload: any): any => {
 
 export const fetchGet: Function = (endpoint: string, payload: any): any => {
 
-  let payloadString: string = ''
-  Object.keys(payload)
-  .forEach((key: string) => {
-    payloadString = `${payloadString}&${key}=${payload[key]}`
-  })
-
-  const endpointPayload: string = `${endpoint}?jsonp=none${payloadString}`
+  const payloadString: string = serviceFunc.serialize(payload, '')
+  const endpointPayload: string = `${endpoint}?jsonp=none&${payloadString}`
   // console.info('fetch.js->fetchGet [5]', { credentials: (devModeTrueFalse() ? 'omit' : 'include'), devModeTrueFalse: devModeTrueFalse(), endpointPayload, payload })
 
   return fetch(endpointPayload, {
