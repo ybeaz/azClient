@@ -9,7 +9,7 @@ export const filterArrObjFirst: Function = (arrObj: {}[], prop: string): any => 
   arrObj.forEach((obj: {}) => {
     const propName: string = obj[prop]
     if (arrObjNext.every((item: {}) => !item[propName])) {
-      // console.info('serviceFunc->filterArrObjFirst', { 'obj[prop]': obj[prop], obj, prop, arrObj })
+      // console.info('serviceFunc->filterArrObjFirst ', { 'obj[prop]': obj[prop], obj, prop, arrObj })
 
       const eventTypeArr: string[] = obj[prop]
         .replace(/^(utAzAction_)([\S]*?)$/gim, '$2')
