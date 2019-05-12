@@ -72,32 +72,28 @@ setInterval(() => {
 }, 1000)
 
 /**
- * @description Block for attaching watch function on possible user actions
+ * @description Block for attaching watch function on possible user actions and other events
  */
 setTimeout(() => {
 
   const watchActionCallBack: Function = (props: any): void => {
     const { event, eventType, eventName, eventLevelNext, eventClass, actionElem } = props
     const { localName, type } = actionElem
-    const { actions: actionsPrev, inpData: inpDataPrev, target: targetPrev } = store.getState().userFootprint
+    const { eventData: eventDataPrev, target: targetPrev } = store.getState().userFootprint
 
-    // Block for actions
-    let actionsNext: {}[] = [{ type: eventType, name: eventName }] // [dataInpStr]
-    actionsNext = serviceFunc.getArrToSave(actionsPrev, actionsNext, 'add', '', '')
-
-    // Block for inpData
+    // Block for eventData (and actions)
     let val: string | number = event.target.value
     if (localName === 'input' && type === 'checkbox') {
       val = event.target.checked
     }
-    let inpDataNext: {}[] = [{ eventClass, tag: localName, val }]
-    inpDataNext = serviceFunc.getArrToSave(inpDataPrev, inpDataNext, 'add', '', 'eventClass')
-    // console.info('index.js Actions [5]', { val, localName, type, eventType, target: event.target, actionElem })
+    let eventDataNext: {}[] = [{ eventClass, tag: localName, val }]
+    eventDataNext = serviceFunc.getArrToSave(eventDataPrev, eventDataNext, 'add', '', 'eventClass')
+    // console.info('index.js [5]', { val, localName, type, eventType, target: event.target, actionElem })
 
     // Block for target
     const { level } = targetPrev[0] // JSON.parse(target[0])
     const eventLevel: number = level ? level : 0
-    // console.info('index.js Actions [5]', { eventLevelNext, eventLevel, level, parse: JSON.parse(target[0] })
+    // console.info('index.js [5]', { eventLevelNext, eventLevel, level, parse: JSON.parse(target[0] })
     if (eventLevelNext > eventLevel) {
       const targetNextObj: object = {
         level: eventLevelNext,
@@ -107,17 +103,16 @@ setTimeout(() => {
       store.dispatch(actions.UPDATE_USER_FOOTPRINT({ target: targetNext }))
     }
 
-    store.dispatch(actions.UPDATE_USER_FOOTPRINT({ actions: actionsNext, inpData: inpDataNext }))
+    store.dispatch(actions.UPDATE_USER_FOOTPRINT({ eventData: eventDataNext }))
 
     /*
     setTimeout(() => {
-      const { actions: recordNext } = store.getState().userFootprint
-      console.info('index.js Actions [10]', { userFootprint: store.getState(), inpDataNext, actionsNext })
+      console.info('index.js [10]', { userFootprint: store.getState(), eventDataNext, actionsNext })
     }, 250)
     */
   }
 
-  // For actions collecting
+  // For event-actions collecting
   const actionElems: any = document.querySelectorAll('[class*="utAzAction_"]')
   const actionArr: any[] = []
   for (let i = 0; i < actionElems.length; i += 1) {
@@ -139,7 +134,7 @@ setTimeout(() => {
     })
   }
 
-  // console.info('index.js Actions [0]', { actionArr })
+  // console.info('index.js [0]', { actionArr })
 }, 500)
 
 /**
@@ -151,36 +146,28 @@ setInterval(() => {
     const {
       utAnltSid: utAnltSidTemp,
       topics: topicsTemp,
-      actions: actionsTemp,
-      inpData: inpDataTemp,
+      eventData: eventDataTemp,
       target: targetTemp,
     } = reduxStore.userFootprint
     let {  } = reduxStore.userFootprint
 
-    const inpDataTemp2: any[] = []
-    if (inpDataTemp.length > 0) {
-      for (const item of inpDataTemp) {
+    const eventDataTemp2: any[] = []
+    if (eventDataTemp.length > 0) {
+      for (const item of eventDataTemp) {
         const { type, name, level, val } = item
-        inpDataTemp2.push({ type, name, level, val })
+        eventDataTemp2.push({ type, name, level, val })
       }
     }
 
     const optPost: string = 'sua'
     const payload: {} = {
       endpoint, optPost,
-      utAnltSid: utAnltSidTemp, topics: topicsTemp, actions: actionsTemp,
-      inpData: inpDataTemp2, target: targetTemp,
+      utAnltSid: utAnltSidTemp, topics: topicsTemp,
+      eventData: eventDataTemp2, target: targetTemp,
     }
 
     store.dispatch(actions.getActionAsync('SAVE_USER_VISIT_ACTIONS', 'REQUEST', payload))
-    // console.info('index.js->save fooprint [10]', { inpData: inpDataTemp, payload })
+    // console.info('index.js->save fooprint [10]', { eventData: eventDataTemp, payload })
   },
   2000,
 )
-
-/*
-  const storeSlip: any = store.getState()
-  const { userFootprint } = storeSlip
-  const { topics, actions, target } = userFootprint
-
-*/

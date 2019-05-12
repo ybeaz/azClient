@@ -11,9 +11,8 @@ export interface Payload {
   readonly optPost?: string,
   readonly utAnltSid?: string,
   readonly initData?: {}[],
-  readonly inpData?: {}[] | [],
+  readonly eventData?: {}[] | [],
   readonly topics?: string[] | [],
-  readonly actions?: string[] | [],
   readonly target?: any[] | [],
   readonly role?: string[],
   readonly msg?: string[],
@@ -36,9 +35,8 @@ export interface Payload {
 export interface UserFootprint {
   readonly utAnltSid?: string,
   readonly initData?: {}[] | [],
-  readonly inpData?: any[] | [],
+  readonly eventData?: any[] | [],
   readonly topics?: string[] | [],
-  readonly actions?: string[] | [],
   readonly target?: any[] | [],
 }
 

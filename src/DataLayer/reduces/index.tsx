@@ -10,8 +10,7 @@ const userFootprint: any = (
     utAnltSid: '',
     initData: [],
     topics: [],
-    actions: [],
-    inpData: [],
+    eventData: [],
     target: [],
   }
 

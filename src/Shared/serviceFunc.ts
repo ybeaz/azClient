@@ -4,12 +4,12 @@
  */
 export const filterArrObjFirst: Function = (arrObj: {}[], prop: string): any => {
 
-  let arrObjNext: {}[] = []
+  const arrObjNext: {}[] = []
 
-  for (const obj of arrObj) {
+  arrObj.forEach((obj: {}) => {
     const propName: string = obj[prop]
     if (arrObjNext.every((item: {}) => !item[propName])) {
-      console.info('serviceFunc->filterArrObjFirst', { 'obj[prop]': obj[prop], obj, prop, arrObj })
+      // console.info('serviceFunc->filterArrObjFirst', { 'obj[prop]': obj[prop], obj, prop, arrObj })
 
       const eventTypeArr: string[] = obj[prop]
         .replace(/^(utAzAction_)([\S]*?)$/gim, '$2')
@@ -17,14 +17,8 @@ export const filterArrObjFirst: Function = (arrObj: {}[], prop: string): any => 
       const [eventType, eventName, eventLevel] = eventTypeArr
       arrObjNext.push({ ...obj, type: eventType, name: eventName, level: eventLevel, [propName]: true })
     }
-  }
-  /*
-  arrObjNext = arrObjNext.map((item: any) => {
-    const { type, name, level, val } = item
-
-    return { type, name, level, val }
   })
-  */
+
   return arrObjNext
 }
 
@@ -170,7 +164,7 @@ export const getArrToSave: Function =
       // console.info('getArrToSave [7]', { dataNext })
       dataNext = array_filter(dataNext)
       // console.info('getArrToSave [9]', { dataNext })
-      if (prop && prop !== '') {
+      if (prop && prop !== '' && dataInp0[prop]) {
         dataNext = filterArrObjFirst(dataNext, prop)
       }
     }
