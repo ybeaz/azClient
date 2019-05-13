@@ -19,17 +19,21 @@
     ],
     "downlevelIteration": true,
   },
-  "exclude": [
-    "./node_modules/**/*"
+  "include": [
+    "./src/**/*"
   ],
+  "exclude": [
+    "./node_modules/**/*",
+    "./dist/**/*"
+  ],
+  "linterOptions": {
+    "exclude": [
+      "config/**/*",
+      "node_modules/**/*"
+    ]
+  },
   "defaultSeverity": "warning",
-   "linterOptions": {
-     "exclude": [
-       "config/**/*.js",
-       "node_modules/**/*.ts"
-     ]
-   },
-   "awesomeTypescriptLoaderOptions": {
+  "awesomeTypescriptLoaderOptions": {
     "errorsAsWarnings": true,
     "useCache": true,
   }
