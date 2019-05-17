@@ -161,7 +161,7 @@ setInterval(() => {
     }
 
     store.dispatch(actions.getActionAsync('SAVE_USER_VISIT_ACTIONS', 'REQUEST', payload))
-    console.info('index.js->save fooprint [10]', { eventDataTemp, payload })
+    // console.info('index.js->save fooprint [10]', { eventDataTemp, payload })
   },
   2000,
 )
