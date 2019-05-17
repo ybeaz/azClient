@@ -7,7 +7,7 @@ function* getSavedUserVisitActions(payload) {
   const payloadNext = payload
   delete payloadNext.endpoint
   delete payloadNext.type
-  // console.info('getSavedUserVisitActions [0]', { payload, 'JSON.stringify(payload)': JSON.stringify(payload) })
+  console.info('getSavedUserVisitActions [0]', { endpoint, payload, 'JSON.stringify(payload)': JSON.stringify(payload) })
   try {
     const response = yield fetchPost(endpoint, payloadNext)
 
