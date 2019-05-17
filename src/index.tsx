@@ -86,12 +86,9 @@ setTimeout(() => {
     if (localName === 'input' && type === 'checkbox') {
       val = event.target.checked
     }
-    let eventDataNext: {}[] = [{
-      class: eventClass, tag: localName, event: eventType,
-      name: eventName, val, level: eventLevelNext,
-    }]
+    let eventDataNext: {}[] = [{ eventClass, tag: localName, val }]
     eventDataNext = serviceFunc.getArrToSave(eventDataPrev, eventDataNext, 'add', '', 'eventClass')
-    // console.info('index.js [5]', { eventDataNext, eventDataPrev, val, localName, type, eventType, target: event.target, actionElem })
+    // console.info('index.js [5]', { val, localName, type, eventType, target: event.target, actionElem })
 
     // Block for target
     const { level } = targetPrev[0] // JSON.parse(target[0])
@@ -102,7 +99,7 @@ setTimeout(() => {
         level: eventLevelNext,
         name: eventName,
       }
-      const targetNext: {}[] = [targetNextObj]
+      const targetNext: {}[] = [targetNextObj] // [JSON.stringify(targetNextObj)]
       store.dispatch(actions.UPDATE_USER_FOOTPRINT({ target: targetNext }))
     }
 
@@ -110,7 +107,7 @@ setTimeout(() => {
 
     /*
     setTimeout(() => {
-      console.info('index.js [10]', { userFootprint: store.getState(), eventDataNext, eventDataPrev })
+      console.info('index.js [10]', { userFootprint: store.getState(), eventDataNext, actionsNext })
     }, 250)
     */
   }
@@ -152,16 +149,25 @@ setInterval(() => {
       eventData: eventDataTemp,
       target: targetTemp,
     } = reduxStore.userFootprint
+    let {  } = reduxStore.userFootprint
+
+    const eventDataTemp2: any[] = []
+    if (eventDataTemp.length > 0) {
+      for (const item of eventDataTemp) {
+        const { type, name, level, val } = item
+        eventDataTemp2.push({ type, name, level, val })
+      }
+    }
 
     const optPost: string = 'sua'
     const payload: {} = {
       endpoint, optPost,
       utAnltSid: utAnltSidTemp, topics: topicsTemp,
-      eventData: eventDataTemp, target: targetTemp,
+      eventData: eventDataTemp2, target: targetTemp,
     }
 
     store.dispatch(actions.getActionAsync('SAVE_USER_VISIT_ACTIONS', 'REQUEST', payload))
-    console.info('index.js->save fooprint [10]', { eventDataTemp, payload })
+    // console.info('index.js->save fooprint [10]', { eventData: eventDataTemp, payload })
   },
   2000,
 )
