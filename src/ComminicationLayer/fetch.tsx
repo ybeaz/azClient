@@ -12,7 +12,7 @@ export const fetchPost: Function = (endpoint: string, payload: any): any => {
       Accept: 'application/json, application/x-www-form-urlencoded, text/plain, */*',
       'access-control-allow-origin': '.userto.com',
       //'access-control-allow-headers': 'content-type, access-control-allow-origin, access-control-allow-methods, content-type',
-      'content-type': 'text/plain',
+      'content-type': 'application/json',
       // 'Content-Type': 'application/x-www-form-urlencoded', text/plain, application/json
     },
     redirect: 'follow', // manual, *follow, error

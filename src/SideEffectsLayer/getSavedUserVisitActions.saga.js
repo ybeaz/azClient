@@ -10,7 +10,6 @@ function* getSavedUserVisitActions(payload) {
   // console.info('getSavedUserVisitActions [0]', { endpoint, payload, 'JSON.stringify(payload)': JSON.stringify(payload) })
   try {
     const response = yield fetchPost(endpoint, payloadNext)
-
     const data = yield response.json()
     // console.info('getUserAnalyticsData [7]', { data })
   }

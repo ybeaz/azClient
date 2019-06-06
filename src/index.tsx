@@ -14,7 +14,6 @@ const endpoint: string = serviceFunc.getEndpoint(location)
 /**
  * @description Block for starting a session and collecting an initial data
  */
-const optGet: string = 'sus'
 let utAnltSid: string = serviceFunc.Cookie.get('utAnltSid')
 if (utAnltSid === undefined) {
   utAnltSid = uuidv4()
@@ -27,11 +26,23 @@ const { width, height } = serviceFunc.mediaSizeCrossBrowser(global)
 const { referrer } = document
 const target: {}[] = [{ level: 0, name: 'start' }] // [JSON.stringify({ level: 0, name: 'start' })]
 const initData: {}[] = [{ width, height, search, pathname, hostname, href, referrer }]
-const data: {} = { endpoint, optGet, utAnltSid, target, initData }
+const data: {} = { endpoint, utAnltSid, target, initData }
 store.dispatch(actions.UPDATE_USER_FOOTPRINT(data))
 setTimeout(
   () => {
-    const payload: object = data
+    const payload: {} = {
+      endpoint,
+      operationName: false,
+      variables: {
+        webAnalytics: {
+          utAnltSid,
+          initData,
+          target,
+        },
+      },
+      query: 'mutation saveUserAnalytics3($webAnalytics: WebAnalyticsInput){saveUserAnalytics3(webAnalytics: $webAnalytics){n, nModified, ok, upserted}}'
+    }
+
     store.dispatch(actions.getActionAsync('START_USER_SESSION', 'REQUEST', payload))
     const storeSlip: object = store.getState()
     // console.info('index->start session [0] ', { payload, storeSlip, data })
@@ -87,12 +98,14 @@ setTimeout(() => {
       val = event.target.checked
     }
     let eventDataNext: {}[] = [{ eventClass, tag: localName, val }]
+    eventDataNext = serviceFunc.filterArrObjFirst(eventDataNext, 'eventClass')
+    // console.info('index.js [3]', { eventDataNext, eventDataPrev })
     eventDataNext = serviceFunc.getArrToSave(eventDataPrev, eventDataNext, 'add', '', 'eventClass')
-    // console.info('index.js [5]', { val, localName, type, eventType, target: event.target, actionElem })
+    // console.info('index.js [4]', { eventDataNext, eventDataPrev })
 
     // Block for target
     const { level } = targetPrev[0] // JSON.parse(target[0])
-    const eventLevel: number = level ? level : 0
+    const eventLevel: number = level ? parseInt(level, 10) : 0
     // console.info('index.js [5]', { eventLevelNext, eventLevel, level, parse: JSON.parse(target[0] })
     if (eventLevelNext > eventLevel) {
       const targetNextObj: object = {
@@ -103,6 +116,7 @@ setTimeout(() => {
       store.dispatch(actions.UPDATE_USER_FOOTPRINT({ target: targetNext }))
     }
 
+    // console.info('index.tsx [07]', { eventLevelNext, eventDataNext })
     store.dispatch(actions.UPDATE_USER_FOOTPRINT({ eventData: eventDataNext }))
 
     /*
@@ -149,21 +163,27 @@ setInterval(() => {
       eventData: eventDataTemp,
       target: targetTemp,
     } = reduxStore.userFootprint
-    let {  } = reduxStore.userFootprint
 
-    const eventDataTemp2: any[] = []
+    const eventDataTemp2: { type: String; name: String; level: Number; val: String }[] = []
     if (eventDataTemp.length > 0) {
       for (const item of eventDataTemp) {
         const { type, name, level, val } = item
         eventDataTemp2.push({ type, name, level, val })
       }
     }
-
-    const optPost: string = 'sua'
+    // console.info('index.tsx [09]', { eventDataTemp, eventDataTemp2 })
     const payload: {} = {
-      endpoint, optPost,
-      utAnltSid: utAnltSidTemp, topics: topicsTemp,
-      eventData: eventDataTemp2, target: targetTemp,
+      endpoint,
+      operationName: false,
+      variables: {
+        webAnalytics: {
+          utAnltSid: utAnltSidTemp,
+          topics: topicsTemp,
+          eventData: eventDataTemp2,
+          target: targetTemp,
+        },
+      },
+      query: 'mutation saveUserAnalytics3($webAnalytics: WebAnalyticsInput){saveUserAnalytics3(webAnalytics: $webAnalytics){n, nModified, ok, upserted}}',
     }
 
     store.dispatch(actions.getActionAsync('SAVE_USER_VISIT_ACTIONS', 'REQUEST', payload))
