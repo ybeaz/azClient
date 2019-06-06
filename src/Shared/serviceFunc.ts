@@ -15,7 +15,8 @@ export const filterArrObjFirst: Function = (arrObj: {}[], prop: string): any => 
         .replace(/^(utAzAction_)([\S]*?)$/gim, '$2')
         .split('_')
       const [eventType, eventName, eventLevel] = eventTypeArr
-      arrObjNext.push({ ...obj, type: eventType, name: eventName, level: eventLevel, [propName]: true })
+      const eventLevelNext: number = eventLevel !== undefined ? parseInt(eventLevel, 10) : 0
+      arrObjNext.push({ ...obj, type: eventType, name: eventName, level: eventLevelNext, [propName]: true })
     }
   })
 
@@ -44,9 +45,10 @@ export const serialize: Function = (obj: any, prefix: string): string => {
  */
 export const getEndpoint: Function = (location: Location): string => {
   const { protocol, port, hostname } = location
-  let endpoint: string = 'https://nd.userto.com/api/apiP2p/2.0'
+  let endpoint: string = 'https://nd.userto.com/graphql'
   if (hostname === '127.0.0.1') {
-    endpoint = `http://127.0.0.1:8081/api/apiP2p/2.0`
+    // endpoint = `http://127.0.0.1:8081/api/apiP2p/2.0`
+    endpoint = `http://127.0.0.1:8082/graphql`
   }
   // console.info('serviceFunc->getEndpoint', { endpoint, location })
   return endpoint
@@ -164,9 +166,6 @@ export const getArrToSave: Function =
       // console.info('getArrToSave [7]', { dataNext })
       dataNext = array_filter(dataNext)
       // console.info('getArrToSave [9]', { dataNext })
-      if (prop && prop !== '' && dataInp0[prop]) {
-        dataNext = filterArrObjFirst(dataNext, prop)
-      }
     }
   }
 
