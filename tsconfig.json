@@ -1,36 +1,22 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
-    "noImplicitAny": false,
-    "module": "esnext",
-    "target": "es5",
-    "jsx": "react",
-    "allowJs": true,
-    "sourceMap": true,
-    "lib": ["dom", "es2015", "es5", "es6", "es2017.object"],
-    "typeRoots": [
-      "./node_modules/@types/"
-    ],
-    "allowSyntheticDefaultImports": true,
+    "module": "commonjs",
+    "declaration": true,
+    "checkJs": false,
     "esModuleInterop": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "target": "es2017",
     "moduleResolution": "node",
-    "types": [
-      "node"
-    ],
-    "downlevelIteration": true,
+    "jsx": "preserve",
+    "types": ["node", "jest", "react-dom"],
+    "lib": ["dom", "es2018", "es2015", "es5", "es6"],
+    "typeRoots": ["./node_modules/@types/", "src/@types"]
   },
-  "exclude": [
-    "./node_modules/**/*"
-  ],
-  "defaultSeverity": "warning",
-   "linterOptions": {
-     "exclude": [
-       "config/**/*.js",
-       "node_modules/**/*.ts"
-     ]
-   },
-   "awesomeTypescriptLoaderOptions": {
-    "errorsAsWarnings": true,
-    "useCache": true,
-  }
+  "include": ["./src/**/*"],
+  "exclude": ["./node_modules/**/*", "./dist/**/*"],
+  "linterOptions": {
+    "exclude": ["config/**/*", "node_modules/**/*"]
+  },
+  "defaultSeverity": "warning"
 }

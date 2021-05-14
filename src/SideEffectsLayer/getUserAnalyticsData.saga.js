@@ -1,7 +1,7 @@
 import { takeEvery, call, put } from 'redux-saga/effects'
 
 import { fetchGet } from '../ComminicationLayer/fetch'
-import * as actions from '../DataLayer/actions/index'
+import * as action from '../DataLayer/index.action'
 
 function* getUserAnalyticsData(payload) {
   // console.info('getUserAnalyticsData [0]', { payload })
@@ -12,16 +12,16 @@ function* getUserAnalyticsData(payload) {
     const data = yield response.json()
     // console.info('getUserAnalyticsData [7]', { data })
 
-    yield put(actions.getActionAsync('GET_USER_ANALYTICS_DATA', 'SUCCESS', { data }))
-    yield put(actions.CLOSE_ALL_MODALS(data))
-  }
-  catch (error) {
+    yield put(
+      action.getActionAsync('GET_USER_ANALYTICS_DATA', 'SUCCESS', { data })
+    )
+    yield put(action.CLOSE_ALL_MODALS(data))
+  } catch (error) {
     yield call(() => {})
   }
 }
 
 export default function* getUserAnalyticsDataWatcher() {
   // console.info('getSavedUserVisitActionsMdbWatcher START_USER_SESSION', )
-  yield takeEvery(['GET_USER_ANALYTICS_DATA_REQUEST'],
-    getUserAnalyticsData)
+  yield takeEvery(['GET_USER_ANALYTICS_DATA_REQUEST'], getUserAnalyticsData)
 }

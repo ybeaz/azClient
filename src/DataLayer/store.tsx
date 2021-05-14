@@ -3,7 +3,7 @@ import createSagaMiddleware from 'redux-saga'
 import { loggerDispatch } from './middleware'
 import appCombineReducers from './reduces/index'
 import indexSaga from '../SideEffectsLayer/index.saga'
-import * as actionSet from './actions/index'
+import * as actionSet from './index.action'
 
 const configureStore = (): any => {
   const sagaMiddleware = createSagaMiddleware()

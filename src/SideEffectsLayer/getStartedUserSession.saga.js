@@ -1,25 +1,21 @@
 import { takeEvery, call } from 'redux-saga/effects'
 
+import * as action from '../DataLayer/index.action'
 import { fetchPost } from '../ComminicationLayer/fetch'
 
-function* getStartedUserSession(payload) {
-  const { endpoint } = payload
-  const payloadNext = payload
-  delete payloadNext.endpoint
-  delete payloadNext.type
-  // console.info('getStartedUserSession [0]', { payload })
+function* getStartedUserSession({ data }) {
+  const { endpoint, type, ...payload } = data
   try {
-    const response = yield fetchPost(endpoint, payloadNext)
+    const response = yield fetchPost(endpoint, payload)
     const data = yield response.json()
-    // console.info('getStartedUserSession.saga.js [7]', { data })
-  }
-  catch (error) {
+  } catch (error) {
     yield call(() => {})
   }
 }
 
 export default function* getStartedUserSessionWatcher() {
-  // console.info('getSavedUserVisitActionsMdbWatcher START_USER_SESSION', )
-  yield takeEvery(['START_USER_SESSION_REQUEST'],
-    getStartedUserSession)
+  yield takeEvery(
+    [action.START_USER_SESSION.REQUEST().type],
+    getStartedUserSession
+  )
 }

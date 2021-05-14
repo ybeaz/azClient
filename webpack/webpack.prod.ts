@@ -1,21 +1,20 @@
-const merge = require('webpack-merge');
-const common = require('./webpack.common.js');
+import { common } from './webpack.common'
 //https://stackoverflow.com/questions/49053215/webpack-4-how-to-configure-minimize
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+import TerserPlugin from 'terser-webpack-plugin'
+import { commonPlugins, devPlugins } from './plugins'
 
-module.exports = merge(common, {
+export default {
+  ...common,
   mode: 'production',
   devtool: 'source-map',
   optimization: {
-    namedModules: false,
-    namedChunks: false,
     nodeEnv: 'production',
     flagIncludedChunks: true,
-    occurrenceOrder: true,
     sideEffects: true,
     usedExports: true,
     concatenateModules: true,
-    splitChunks: { /*
+    splitChunks: {
+      /*
       cacheGroups: {
         commons: {
             test: /[\\/]node_modules[\\/]/,
@@ -25,25 +24,23 @@ module.exports = merge(common, {
       },
       minSize: 30000,
       maxAsyncRequests: 5,
-      maxAsyncRequests: 3,      
-    */ },
-    noEmitOnErrors: true,
-    minimize: true, 
+      maxAsyncRequests: 3,
+    */
+    },
+    minimize: true,
     minimizer: [
       // we specify a custom UglifyJsPlugin here to get source maps in production
-      new UglifyJsPlugin({
-        cache: true,
-        parallel: true,
-        uglifyOptions: {
-          compress: false,
-          ecma: 6,
-          mangle: true
+      new TerserPlugin({
+        terserOptions: {
+          mangle: true,
+          compress: { hoist_props: false },
         },
-        sourceMap: true
-      })
+        parallel: 4,
+      }),
     ],
     removeAvailableModules: true,
     removeEmptyChunks: true,
-    mergeDuplicateChunks: true,    
-  },  
-});
+    mergeDuplicateChunks: true,
+  },
+  plugins: [...commonPlugins, ...devPlugins],
+}

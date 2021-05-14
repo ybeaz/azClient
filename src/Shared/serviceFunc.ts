@@ -1,22 +1,30 @@
-
 /**
  * @description Function to filter the first object of the object group with prop in an array of objects
  */
-export const filterArrObjFirst: Function = (arrObj: {}[], prop: string): any => {
+export const filterArrObjFirst: Function = (
+  arrObj: any[],
+  prop: string
+): any => {
+  const arrObjNext: any[] = []
 
-  const arrObjNext: {}[] = []
-
-  arrObj.forEach((obj: {}) => {
+  arrObj.forEach((obj: any) => {
     const propName: string = obj[prop]
-    if (arrObjNext.every((item: {}) => !item[propName])) {
+    if (arrObjNext.every((item: any) => !item[propName])) {
       // console.info('serviceFunc->filterArrObjFirst ', { 'obj[prop]': obj[prop], obj, prop, arrObj })
 
       const eventTypeArr: string[] = obj[prop]
         .replace(/^(utAzAction_)([\S]*?)$/gim, '$2')
         .split('_')
       const [eventType, eventName, eventLevel] = eventTypeArr
-      const eventLevelNext: number = eventLevel !== undefined ? parseInt(eventLevel, 10) : 0
-      arrObjNext.push({ ...obj, type: eventType, name: eventName, level: eventLevelNext, [propName]: true })
+      const eventLevelNext: number =
+        eventLevel !== undefined ? parseInt(eventLevel, 10) : 0
+      arrObjNext.push({
+        ...obj,
+        type: eventType,
+        name: eventName,
+        level: eventLevelNext,
+        [propName]: true,
+      })
     }
   })
 
@@ -27,18 +35,19 @@ export const filterArrObjFirst: Function = (arrObj: {}[], prop: string): any => 
  * @description Function to serialize object or array for get request
  */
 export const serialize: Function = (obj: any, prefix: string): string => {
-    const arr: any[] = []
-    Object.keys(obj).forEach((key: string) => {
-      const k: string = prefix ? `${prefix}[${key}]` : key
-      const v: any = obj[key]
-      arr.push((v !== null && typeof v === 'object') ?
-        serialize(v, k) :
-          `${encodeURIComponent(k)}=${encodeURIComponent(v)}`,
-      )
-    })
+  const arr: any[] = []
+  Object.keys(obj).forEach((key: string) => {
+    const k: string = prefix ? `${prefix}[${key}]` : key
+    const v: any = obj[key]
+    arr.push(
+      v !== null && typeof v === 'object'
+        ? serialize(v, k)
+        : `${encodeURIComponent(k)}=${encodeURIComponent(v)}`
+    )
+  })
 
-    return arr.join('&')
-  }
+  return arr.join('&')
+}
 
 /**
  * @description Function to define endpoing (dev, prod mode)
@@ -70,13 +79,11 @@ const empty: Function = (mixedVar: any): boolean => {
     return true
   }
 
-  if (toString.call(mixedVar) === '[object Array]'
-    && mixedVar.length === 0
-  ) {
+  if (toString.call(mixedVar) === '[object Array]' && mixedVar.length === 0) {
     return true
-  }
-  else if (toString.call(mixedVar) === '[object Array]'
-    && mixedVar.length > 0
+  } else if (
+    toString.call(mixedVar) === '[object Array]' &&
+    mixedVar.length > 0
   ) {
     return false
   }
@@ -90,11 +97,9 @@ const mixedVarToArray: Function = (mixedVar: any): any[] => {
   let output
   if (mixedVar === undefined) {
     output = []
-  }
-  else if (typeof mixedVar === 'string') {
+  } else if (typeof mixedVar === 'string') {
     output = [mixedVar]
-  }
-  else {
+  } else {
     output = mixedVar
   }
   return output
@@ -114,15 +119,16 @@ const array_merge: Function = (dataNext, data): any => {
  * @description Function to filter data to array with unique values
  */
 const array_unique: Function = (data: any[]): any[] => {
-
   const x: any[] = data.slice().sort()
   const temp: any[] = []
   let index: number = 0
   for (let i: number = 0; i < x.length; i += 1) {
-    if (x[i] !== undefined
-      && JSON.stringify(x[i]) !== JSON.stringify(x[i + 1])) {
-        temp[index] = x[i]
-        index += 1
+    if (
+      x[i] !== undefined &&
+      JSON.stringify(x[i]) !== JSON.stringify(x[i + 1])
+    ) {
+      temp[index] = x[i]
+      index += 1
     }
   }
 
@@ -133,15 +139,19 @@ const array_unique: Function = (data: any[]): any[] => {
  * @description Function to filter array (analogy of php array_filter)
  */
 const array_filter: Function = (data: any): any => {
-
   return data.filter((item: any) => JSON.stringify(item) !== JSON.stringify([]))
 }
 
 /**
  * @description Function to get array to save covering various cases
  */
-export const getArrToSave: Function =
-  (record, dataInp, caseOption, target, prop): any => {
+export const getArrToSave: Function = (
+  record,
+  dataInp,
+  caseOption,
+  target,
+  prop
+): any => {
   // console.info('getArrToSave [0]', { record, dataInp, caseOption, target })
   const record0 = record && record[0] ? record[0] : ''
   const dataInp0 = dataInp && dataInp[0] ? dataInp[0] : ''
@@ -152,14 +162,11 @@ export const getArrToSave: Function =
   if (caseOption === 'add') {
     if (empty(record0) === true && empty(dataInp0) === true) {
       dataNext = []
-    }
-    else if (empty(record0) === false && empty(dataInp0) === true) {
+    } else if (empty(record0) === false && empty(dataInp0) === true) {
       dataNext = record
-    }
-    else if (empty(record0) === true && empty(dataInp0) === false) {
+    } else if (empty(record0) === true && empty(dataInp0) === false) {
       dataNext = dataInp
-    }
-    else if (empty(record0) === false && empty(dataInp0) === false) {
+    } else if (empty(record0) === false && empty(dataInp0) === false) {
       dataNext = array_merge(record, dataInp)
       // console.info('getArrToSave [5]', { dataNext, dataInp, record })
       dataNext = array_unique(dataNext)
@@ -172,68 +179,50 @@ export const getArrToSave: Function =
   if (caseOption === 'addAll') {
     if (empty(record0) === true && empty(dataInp0) === true) {
       dataNext = []
-    }
-    else if (empty(record0) === false && empty(dataInp0) === true) {
+    } else if (empty(record0) === false && empty(dataInp0) === true) {
       dataNext = record
-    }
-    else if (empty(record0) === true && empty(dataInp0) === false) {
+    } else if (empty(record0) === true && empty(dataInp0) === false) {
       dataNext = dataInp
-    }
-    else if (empty(record0) === false && empty(dataInp0) === false) {
+    } else if (empty(record0) === false && empty(dataInp0) === false) {
       dataNext = array_merge(record, dataInp)
       dataNext = array_filter(dataNext)
     }
-  }
-
-  else if (caseOption === 'new') {
+  } else if (caseOption === 'new') {
     // console.info('getArrToSave', { record0, 'empty(record0)': empty(record0), dataInp0, 'empty(dataInp0)': empty(dataInp0), dataInp, record })
 
     if (empty(record0) === true && empty(dataInp0) === true) {
       dataNext = []
-    }
-    else if (empty(record0) === false && empty(dataInp0) === true) {
+    } else if (empty(record0) === false && empty(dataInp0) === true) {
       dataNext = record
-    }
-    else if (empty(record0) === true && empty(dataInp0) === false) {
+    } else if (empty(record0) === true && empty(dataInp0) === false) {
       dataNext = dataInp
-    }
-    else if (empty(record0) === false && empty(dataInp0) === false
-        && target0 === 'startSession'
+    } else if (
+      empty(record0) === false &&
+      empty(dataInp0) === false &&
+      target0 === 'startSession'
     ) {
       dataNext = array_merge(dataInp, record)
-    }
-    else if (empty(record0) === false && empty(dataInp0) === false
-        && target0 !== 'startSession'
+    } else if (
+      empty(record0) === false &&
+      empty(dataInp0) === false &&
+      target0 !== 'startSession'
     ) {
       dataNext = dataInp
     }
-  }
-
-  else if (caseOption === 'max') {
-
-    if (dataInp0 === 'registration02'
-    ) {
+  } else if (caseOption === 'max') {
+    if (dataInp0 === 'registration02') {
       dataNext = dataInp
-    }
-    else if (dataInp0 === 'registration01'
-        && record0 !== 'registration02'
-    ) {
+    } else if (dataInp0 === 'registration01' && record0 !== 'registration02') {
       dataNext = dataInp
-    }
-    else if (record0 === 'registration02'
-    ) {
+    } else if (record0 === 'registration02') {
       dataNext = record
-    }
-    else if (empty(record0) === true && empty(dataInp0) === true) {
+    } else if (empty(record0) === true && empty(dataInp0) === true) {
       dataNext = []
-    }
-    else if (empty(record0) === true && empty(dataInp0) === false) {
+    } else if (empty(record0) === true && empty(dataInp0) === false) {
       dataNext = dataInp
-    }
-    else if (empty(record0) === false && empty(dataInp0) === true) {
+    } else if (empty(record0) === false && empty(dataInp0) === true) {
       dataNext = record0
-    }
-    else if (empty(record0) === false && empty(dataInp0) === false) {
+    } else if (empty(record0) === false && empty(dataInp0) === false) {
       dataNext = dataInp
     }
   }
@@ -246,7 +235,7 @@ export const getArrToSave: Function =
  */
 export const mediaSizeCrossBrowser: Function = (w: Window) => {
   // Use serviceFunc.mediaSizeCrossBrowser(global)
-  const mediaSize: {width: number; height: number} = {width: 0, height: 0}
+  const mediaSize: { width: number; height: number } = { width: 0, height: 0 }
   const d: Document = w.document
   const e: HTMLElement = d.documentElement
   const g: HTMLBodyElement = d.getElementsByTagName('body')[0]
@@ -266,27 +255,33 @@ export const mediaSizeCrossBrowser: Function = (w: Window) => {
  * @link https://stackoverflow.com/a/48706852/4791116
  * @link http://usejsdoc.org/
  */
-export const Cookie =
-    { get: (name: string) => {
-        let c = document.cookie.match(`(?:(?:^|.*; *)${name} *= *([^;]*).*$)|^.*$`)[1]
-        if (c) return decodeURIComponent(c)
-      }
-    , set: (name: string, value: string, opts: any = {}) => { 
-        if (opts.days) { 
-            opts['max-age'] = opts.days * 60 * 60 * 24; 
-            delete opts.days 
-            }
-        const { hostname } = location
-        if ( hostname === '127.0.0.1') {
-          delete opts.domain
-        }
-        const optsStr = Object.entries(opts).reduce((str, [k, v]) => `${str}; ${k}=${v}`, '')
-        // console.info('serviceFunc->Cookie->set', { name, value, opts, hostname })
-        document.cookie = name + '=' + encodeURIComponent(value) + optsStr
-      }
-    , delete: (name: string, opts: any) => Cookie.set(name, '', {'max-age': -1, ...opts}) 
-    // path & domain must match cookie being deleted 
+export const Cookie = {
+  get: (name: string) => {
+    let c = document.cookie.match(
+      `(?:(?:^|.*; *)${name} *= *([^;]*).*$)|^.*$`
+    )[1]
+    if (c) return decodeURIComponent(c)
+  },
+  set: (name: string, value: string, opts: any = {}) => {
+    if (opts.days) {
+      opts['max-age'] = opts.days * 60 * 60 * 24
+      delete opts.days
     }
+    const { hostname } = location
+    if (hostname === '127.0.0.1') {
+      delete opts.domain
+    }
+    const optsStr = Object.entries(opts).reduce(
+      (str, [k, v]) => `${str}; ${k}=${v}`,
+      ''
+    )
+    // console.info('serviceFunc->Cookie->set', { name, value, opts, hostname })
+    document.cookie = name + '=' + encodeURIComponent(value) + optsStr
+  },
+  delete: (name: string, opts: any) =>
+    Cookie.set(name, '', { 'max-age': -1, ...opts }),
+  // path & domain must match cookie being deleted
+}
 
 /**
  * @description Returns true for devMode and false for production
@@ -294,7 +289,7 @@ export const Cookie =
 export const devModeTrueFalse: Function = (): boolean => {
   let devMode: boolean = false
   if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-    devMode = true;
+    devMode = true
   }
 
   return devMode

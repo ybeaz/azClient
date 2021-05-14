@@ -1,12 +1,9 @@
-import { DISPATCH_ACTION } from './actions/index'
+import { DISPATCH_ACTION } from './index.action'
 
 //import Raven from 'raven';
 //Raven.config('https://9eaeabf6f2484b84acfee9fab5e44cf0@sentry.io/106530').install();
 //import Sentry from '@sentry/node';
 //Sentry.init({ dsn: 'https://eb0e20ea36a9426882da8efb7cf98390@sentry.io/1292020' });
-
-
-
 
 /* My custom middleware to keep history of user actions and build scenarious */
 export const loggerDispatch = (store: any) => (next: any) => (action: any) => {
@@ -29,7 +26,7 @@ export const logger = (store: any) => (next: any) => (action: any) => {
   console.log('dispatching', action)
   let result = next(action)
   console.log('next state', store.getState())
-  return result;
+  return result
 }
 
 /**
@@ -55,20 +52,18 @@ export const crashReporter = (store: any) => (next: any) => (action: any) => {
  * Schedules actions with { meta: { delay: N } } to be delayed by N milliseconds.
  * Makes `dispatch` return a function to cancel the timeout in this case.
  */
-export const timeoutScheduler = (store: any) => (next: any) => (action: any) => {
-  if (!action.meta || !action.meta.delay) {
-    return next(action);
-  }
+export const timeoutScheduler =
+  (store: any) => (next: any) => (action: any) => {
+    if (!action.meta || !action.meta.delay) {
+      return next(action)
+    }
 
-  const timeoutId = setTimeout(
-    () => next(action),
-    action.meta.delay
-  );
+    const timeoutId = setTimeout(() => next(action), action.meta.delay)
 
-  return function cancel() {
-    clearTimeout(timeoutId);
+    return function cancel() {
+      clearTimeout(timeoutId)
+    }
   }
-}
 
 /**
  * Schedules actions with { meta: { raf: true } } to be dispatched inside a rAF loop
@@ -76,34 +71,34 @@ export const timeoutScheduler = (store: any) => (next: any) => (action: any) => 
  * this case.
  */
 export const rafScheduler = (store: any) => (next: any) => {
-  let queuedActions = [];
-  let frame = null;
-  
+  let queuedActions = []
+  let frame = null
+
   function loop() {
-    frame = null;
+    frame = null
     try {
       if (queuedActions.length) {
-        next(queuedActions.shift());
+        next(queuedActions.shift())
       }
     } finally {
-      maybeRaf();
+      maybeRaf()
     }
   }
-  
+
   function maybeRaf() {
     if (queuedActions.length && !frame) {
-      frame = requestAnimationFrame(loop);
+      frame = requestAnimationFrame(loop)
     }
   }
-  
+
   return action => {
     if (!action.meta || !action.meta.raf) {
-      return next(action);
+      return next(action)
     }
-    
-    queuedActions.push(action);
-    maybeRaf();
-    
+
+    queuedActions.push(action)
+    maybeRaf()
+
     return function cancel() {
       queuedActions = queuedActions.filter(a => a !== action)
     }
@@ -120,7 +115,7 @@ export const vanillaPromise = (store: any) => (next: any) => (action: any) => {
     return next(action)
   }
 
-  return Promise.resolve(action).then(store.dispatch);
+  return Promise.resolve(action).then(store.dispatch)
 }
 
 /**
@@ -162,5 +157,4 @@ export const readyStatePromise = (store: any) => (next: any) => (action: any) =>
 export const thunk = (store: any) => (next: any) => (action: any) =>
   typeof action === 'function'
     ? action(store.dispatch, store.getState)
-    : next(action);
-    
+    : next(action)
