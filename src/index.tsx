@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 
 import * as action from './DataLayer/index.action'
-import store from './DataLayer/store'
+import { store } from './DataLayer/store'
 import * as serviceFunc from './Shared/serviceFunc'
 import * as Interfaces from './Shared/interfaces'
 

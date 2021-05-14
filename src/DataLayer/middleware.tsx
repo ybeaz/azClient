@@ -9,8 +9,8 @@ import { DISPATCH_ACTION } from './index.action'
 export const loggerDispatch = (store: any) => (next: any) => (action: any) => {
   const data: any = {}
   if (action.type !== DISPATCH_ACTION(data).type) {
-    const payload = action
-    setTimeout(() => store.dispatch(DISPATCH_ACTION({ payload })), 0)
+    const { data } = action
+    setTimeout(() => store.dispatch(DISPATCH_ACTION(data)), 0)
   }
   // console.log('dispatching', action)
   let result = next(action)

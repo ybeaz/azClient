@@ -1,18 +1,17 @@
 import { createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { loggerDispatch } from './middleware'
-import appCombineReducers from './reduces/index'
+import { rootReducer } from './index.reducer'
 import indexSaga from '../SideEffectsLayer/index.saga'
-import * as actionSet from './index.action'
 
-const configureStore = (): any => {
+const configureStore = (rootReducer): any => {
   const sagaMiddleware = createSagaMiddleware()
   const middlewares = [sagaMiddleware, loggerDispatch]
   //[ middleware.logger, middleware.logger, middleware.crashReporter ]
-  const store = createStore(appCombineReducers, applyMiddleware(...middlewares))
+  const store = createStore(rootReducer, applyMiddleware(...middlewares))
   //console.info('index.js->configureStore', indexSaga)
   sagaMiddleware.run(indexSaga)
   return store
 }
 
-export default configureStore()
+export const store = configureStore(rootReducer)

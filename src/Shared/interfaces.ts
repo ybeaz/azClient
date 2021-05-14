@@ -1,3 +1,5 @@
+import { IRootStore } from '../Interfaces/IRootStore'
+
 export interface Img {
   readonly src: string
   readonly alt?: string
@@ -29,17 +31,9 @@ export interface Payload {
   readonly href?: string
 }
 
-export interface UserFootprint {
-  readonly utAnltSid?: string
-  readonly initData?: any[] | []
-  readonly eventData?: any[] | []
-  readonly topics?: string[] | []
-  readonly target?: any[] | []
-}
-
 export interface Store {
   actionLog: object[]
-  userFootprint: UserFootprint
+  userFootprint: IRootStore
 }
 
 export interface ModeProdDev {

@@ -2,7 +2,7 @@ const REQUEST = 'REQUEST'
 const SUCCESS = 'SUCCESS'
 const FAILURE = 'FAILURE'
 
-interface ICreateRequestTypes {
+export interface ICreateRequestTypes {
   REQUEST: Function
   SUCCESS: Function
   FAILURE: Function
