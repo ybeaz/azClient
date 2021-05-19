@@ -11,7 +11,7 @@ import path from 'path'
 
 export const common = {
   entry: {
-    yr: ['./src/index.tsx'],
+    yr: ['./src/index.ts'],
   },
   output: {
     path: path.resolve(__dirname, '../dist'),

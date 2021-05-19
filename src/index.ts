@@ -33,23 +33,22 @@ store.dispatch(action.UPDATE_USER_FOOTPRINT(data))
 setTimeout(() => {
   const data: any = {
     endpoint,
-    operationName: false,
+    operationName: 'SaveAnalytics',
     variables: {
       webAnalytics: {
-        utAnltSid,
+        hash256: '',
         initData,
-        target,
       },
     },
     query:
-      'mutation saveUserAnalytics3($webAnalytics: WebAnalyticsInput){saveUserAnalytics3(webAnalytics: $webAnalytics){n, nModified, ok, upserted}}',
+      'mutation SaveAnalytics($analyticsInput: AnalyticsInput!){saveAnalytics(analyticsInput: $analyticsInput){ analyticsID, hash256, dateCreate, dateUpdate, initData { ...InitDataAll } }} fragment InitDataAll on InitData { width, height, search, pathname, hostname, href, referrer }',
   }
 
   console.info('index [46]', {
-    action: action.START_USER_SESSION.REQUEST(data),
+    action: action.SAVE_ANALYTICS.REQUEST(data),
   })
-  store.dispatch(action.START_USER_SESSION.REQUEST(data))
-  const storeSlip: object = store.getState()
+  store.dispatch(action.SAVE_ANALYTICS.REQUEST(data))
+  // const storeSlip: object = store.getState()
   // console.info('index->start session [0] ', { payload, storeSlip, data })
 }, 50)
 
@@ -176,6 +175,6 @@ setInterval(() => {
   //   },
   //   query: 'mutation saveUserAnalytics3($webAnalytics: WebAnalyticsInput){saveUserAnalytics3(webAnalytics: $webAnalytics){n, nModified, ok, upserted}}',
   // }
-  // store.dispatch(actions.getActionAsync('SAVE_USER_VISIT_ACTIONS', 'REQUEST', payload))
+  // store.dispatch(actions.getActionAsync('SAVE_ANALYTICS', 'REQUEST', payload))
   // // console.info('index.js->save fooprint [10]', { eventDataTemp, payload })
 }, 2000)
