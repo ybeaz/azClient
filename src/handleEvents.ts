@@ -1,5 +1,6 @@
 import { store } from './DataLayer/store'
 import * as action from './DataLayer/index.action'
+import { ANALYTICS_PREFIX } from './Constants/analyticsPrefix'
 import { cookie } from './Shared/cookie'
 import { mediaSizeCrossBrowser } from './Shared/mediaSizeCrossBrowser'
 import { getParsedAzClassToObj } from './Shared/getParsedAzClassToObj'
@@ -24,15 +25,24 @@ export const handleEvents: Function = (event: Event, props: Props): void => {
 
     SAVE_TOPIC: () => {
       const { eventTarget } = data
-      if (eventTarget && eventTarget.closest('[class*="az_"]')) {
-        const topicClassNames: string =
-          eventTarget.closest('[class*="az_"]').className
-        const topicClassNamesArr = topicClassNames.match(/az_[\s\S]*?}/g)
+      if (
+        eventTarget &&
+        eventTarget.closest(`[class*="${ANALYTICS_PREFIX}"]`)
+      ) {
+        const topicClassNames: string = eventTarget.closest(
+          `[class*="${ANALYTICS_PREFIX}"]`
+        ).className
+        const pattern = `${ANALYTICS_PREFIX}[\\s\\S]*?}`
+        const re = new RegExp(pattern, 'g')
+        const topicClassNamesArr = topicClassNames.match(re)
 
         const topicClassNamesArrMapped =
           topicClassNamesArr &&
           topicClassNamesArr.map(topicClassName =>
-            getParsedAzClassToObj({ str: topicClassName, prefix: 'az_' })
+            getParsedAzClassToObj({
+              str: topicClassName,
+              prefix: ANALYTICS_PREFIX,
+            })
           )
 
         topicClassNamesArrMapped &&

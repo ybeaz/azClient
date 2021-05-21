@@ -13,9 +13,9 @@ export const getParsedAzClassToObj: Function = ({
   str,
   prefix = 'az_',
 }: IGetParsedAzClassToObj): any => {
-  const pattern = `^${prefix}([sS^_]*?)$`
+  const pattern = `^${prefix}([\\s\\S^_]*?)$`
   const re = new RegExp(pattern)
-  const az0 = str.match(/^az_([\s\S^_]*?)$/)
+  const az0 = str.match(re)
   try {
     const az1 = az0[1]
     const az2 = az1.replace(/\'/g, '"')
