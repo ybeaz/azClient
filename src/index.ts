@@ -1,6 +1,5 @@
 import { nanoid } from 'nanoid'
 
-import { cookie } from './Shared/cookie'
 import { getArrToSave } from './Shared/getArrToSave'
 import { filterArrObjFirst } from './Shared/filterArrObjFirst'
 import { handleEvents } from './handleEvents'
@@ -10,16 +9,6 @@ import { store } from './DataLayer/store'
 /**
  * @description Block for starting a session and collecting an initial data
  */
-let utAnltSid: string = cookie.get('utAnltSid')
-if (utAnltSid === undefined) {
-  utAnltSid = nanoid()
-  const { hostname } = location
-  cookie.set('utAnltSid', utAnltSid, {
-    domain: hostname,
-    days: 0.5,
-  })
-}
-
 setTimeout(() => {
   handleEvents({}, { typeEvent: 'SAVE_INIT_DATA' })
 }, 50)

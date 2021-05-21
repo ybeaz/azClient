@@ -29,6 +29,7 @@ export interface ITarget {
 export interface IAnalyticsInput {
   analyticsID?: string
   hash256?: string
+  type?: string
   initData?: IInitData
   topic?: ITopic
   event?: IEvent

@@ -1,6 +1,8 @@
 import { select, put, takeEvery, call } from 'redux-saga/effects'
 import axios from 'axios'
 
+import { COOKIE_ANALYTICSID_NAME } from '../Constants/cookieAnalyticsIDName'
+import { cookie } from '../Shared/cookie'
 import { IAnalyticsInput } from '../Interfaces/IAnalyticsInput'
 import { getSavedAnalyticsConnector } from '../ComminicationLayer/getSavedAnalytics.connector'
 import * as action from '../DataLayer/index.action'
@@ -12,10 +14,17 @@ interface IGetSavedAnalytics {
 
 function* getSavedAnalytics(payload: IGetSavedAnalytics) {
   const {
-    data: { initData, topic, event, target },
+    data: { type, initData, topic, event, target },
   } = payload
 
-  const { analyticsID } = yield select(store => store)
+  const { analyticsID: analyticsIDStore } = yield select(store => store)
+  console.info('getSavedAnalytics.saga [21]', {
+    type,
+    initData,
+    topic,
+    event,
+    target,
+  })
 
   try {
     const {
@@ -24,25 +33,36 @@ function* getSavedAnalytics(payload: IGetSavedAnalytics) {
       url,
       payload: payloadNext,
     } = getSavedAnalyticsConnector({
-      ...(analyticsID && { analyticsID }),
-      initData,
-      topic,
-      event,
-      target,
+      ...(analyticsIDStore &&
+        analyticsIDStore !== 'null' && { analyticsID: analyticsIDStore }),
+      ...(type === 'initData' && { initData }),
+      ...(type === 'topic' && { topic }),
+      ...(type === 'event' && { event }),
+      ...(type === 'target' && { target }),
     })
 
     const {
       data: {
-        data: { saveAnalytics },
+        data: {
+          saveAnalytics: { analyticsID },
+        },
       },
     } = yield axios[method](url, payloadNext, options)
-    yield put(action.SAVE_ANALYTICS.SUCCESS(saveAnalytics))
+
+    yield put(action.SAVE_ANALYTICS.SUCCESS({ analyticsID }))
+
+    if (analyticsID && analyticsID !== 'null') {
+      const { hostname } = location
+      cookie.set(COOKIE_ANALYTICSID_NAME, analyticsID, {
+        domain: hostname,
+        days: 0.5,
+      })
+    }
   } catch (error) {
     yield call(() => {})
   }
 }
 
 export default function* getSavedAnalyticsWatcher() {
-  // console.info('getSavedAnalytics SAVE_ANALYTICS', )
   yield takeEvery(action.SAVE_ANALYTICS.REQUEST().type, getSavedAnalytics)
 }

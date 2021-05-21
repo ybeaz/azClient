@@ -4,8 +4,11 @@
  * @returns string
  * @example "az_{'a':1,'b':'some value'}"
  */
-export const getStringifyToAzClass: Function = (obj: any): string => {
+export const getStringifyToAzClass: Function = (
+  obj: any,
+  prefix: string = 'az_'
+): string => {
   const az0 = JSON.stringify(obj)
   const az1 = az0.replace(/\"/g, "'")
-  return `az_${az1}`
+  return `${prefix}${az1}`
 }

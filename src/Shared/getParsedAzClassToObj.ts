@@ -5,6 +5,9 @@
  * @example "az_{'a':1,'b':'some value'}"
  */
 export const getParsedAzClassToObj: Function = (str: string): any => {
+  const prefix = 'az_'
+  const pattern = `^${prefix}([sS^_]*?)$`
+  const re = new RegExp(pattern)
   const az0 = str.match(/^az_([\s\S^_]*?)$/)
   try {
     const az1 = az0[1]
