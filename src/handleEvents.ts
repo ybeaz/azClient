@@ -30,7 +30,8 @@ export const handleEvents: Function = (event: Event, props: Props): void => {
         const topicClassNamesArr = topicClassNames.match(/az_[\s\S]*?}/g)
 
         const topicClassNamesArrMapped = topicClassNamesArr.map(
-          topicClassName => getParsedAzClassToObj(topicClassName)
+          topicClassName =>
+            getParsedAzClassToObj({ str: topicClassName, prefic: 'az_' })
         )
 
         console.info('handleEvents [36]', {
