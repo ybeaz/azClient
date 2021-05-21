@@ -1,4 +1,4 @@
-import { takeEvery, call } from 'redux-saga/effects'
+import { select, put, takeEvery, call } from 'redux-saga/effects'
 import axios from 'axios'
 
 import { IAnalyticsInput } from '../Interfaces/IAnalyticsInput'
@@ -15,6 +15,8 @@ function* getSavedAnalytics(payload: IGetSavedAnalytics) {
     data: { initData, topic, event, target },
   } = payload
 
+  const { analyticsID } = yield select(store => store)
+
   try {
     const {
       method,
@@ -22,6 +24,7 @@ function* getSavedAnalytics(payload: IGetSavedAnalytics) {
       url,
       payload: payloadNext,
     } = getSavedAnalyticsConnector({
+      ...(analyticsID && { analyticsID }),
       initData,
       topic,
       event,
@@ -33,7 +36,7 @@ function* getSavedAnalytics(payload: IGetSavedAnalytics) {
         data: { saveAnalytics },
       },
     } = yield axios[method](url, payloadNext, options)
-    // console.info('getSavedAnalytics [46]', { saveAnalytics })
+    yield put(action.SAVE_ANALYTICS.SUCCESS(saveAnalytics))
   } catch (error) {
     yield call(() => {})
   }

@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid'
+import { nanoid } from 'nanoid'
 
 import { cookie } from './Shared/cookie'
 import { getArrToSave } from './Shared/getArrToSave'
@@ -10,14 +10,15 @@ import { store } from './DataLayer/store'
 /**
  * @description Block for starting a session and collecting an initial data
  */
-// let utAnltSid: string = cookie.get('utAnltSid')
-// if (utAnltSid === undefined) {
-//   utAnltSid = uuidv4()
-//   cookie.set('utAnltSid', utAnltSid, {
-//     domain: hostname,
-//     days: 0.5,
-//   })
-// }
+let utAnltSid: string = cookie.get('utAnltSid')
+if (utAnltSid === undefined) {
+  utAnltSid = nanoid()
+  const { hostname } = location
+  cookie.set('utAnltSid', utAnltSid, {
+    domain: hostname,
+    days: 0.5,
+  })
+}
 
 setTimeout(() => {
   handleEvents({}, { typeEvent: 'SAVE_INIT_DATA' })
@@ -31,26 +32,7 @@ window.onmouseover = (e: Event): void => {
   eventTarget = e.target
 }
 setInterval(() => {
-  // if (eventTarget !== undefined
-  //   && eventTarget.closest('[class*="utAzTopic_"]') !== undefined
-  //   && eventTarget.closest('[class*="utAzTopic_"]') !== null
-  // ) {
-  //   const topicClassNames: string = eventTarget.closest('[class*="utAzTopic_"]').className
-  //   const topic: string = topicClassNames.replace(/^([\s\S]*?)(utAzTopic_[\S]*?)($|\s[\s\S]*?)$/gim, '$2')
-  //     .replace(/^(utAzTopic_)([\S]*?)$/gim, '$2')
-  //   saveUserVisitActions({ target: 'looking', topic })
-  //   // console.info('index.js', { topic })
-  //   const { topics: record } = store.getState().userFootprint
-  //   const topics: string[] = [topic]
-  //   const topicsNext: string[] = getArrToSave(record, topics, 'add', '', '')
-  //   store.dispatch(actions.UPDATE_USER_FOOTPRINT({ topics: topicsNext }))
-  //   /*
-  //   setTimeout(() => {
-  //     //const { topics: recordNext } = store.getState().userFootprint
-  //     //console.info('index.js Topics', { userFootprint: store.getState(), topicsNext, dataInp, record })
-  //   }, 250)
-  //   */
-  // }
+  handleEvents({}, { typeEvent: 'SAVE_TOPIC', data: { eventTarget } })
 }, 1000)
 
 /**

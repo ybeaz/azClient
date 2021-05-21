@@ -24,6 +24,7 @@ export const getSavedAnalyticsConnector: Function = (
       operationName: 'SaveAnalytics',
       variables: {
         analyticsInput: {
+          ...(props.analyticsID && { analyticsID: props.analyticsID }),
           hash256,
           ...(props.initData && { initData: props.initData }),
           ...(props.topic && { topic: props.topic }),

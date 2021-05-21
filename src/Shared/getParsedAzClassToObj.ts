@@ -1,7 +1,8 @@
 /**
  * @description Function to convert back to object string of pattern "az_{'a':1,'b':'some value'}"
- * @param str
- * @returns
+ * @param str: string
+ * @returns obj: any
+ * @example "az_{'a':1,'b':'some value'}"
  */
 export const getParsedAzClassToObj: Function = (str: string): any => {
   const az0 = str.match(/^az_([\s\S^_]*?)$/)

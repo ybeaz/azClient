@@ -1,7 +1,8 @@
 /**
  * @description Function to stringify object to the pattern "az_{'a':1,'b':'some value'}"
- * @param obj
- * @returns
+ * @param obj: any
+ * @returns string
+ * @example "az_{'a':1,'b':'some value'}"
  */
 export const getStringifyToAzClass: Function = (obj: any): string => {
   const az0 = JSON.stringify(obj)
