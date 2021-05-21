@@ -44,21 +44,22 @@
 
 <body>
 
-  <h1 class="az_{'type': 'topic','name':'h1: My JavaScript'}">My JavaScript</h1>
+  <h1 class="az_{'spec':'topic','name':'h1: My JavaScript'}">My JavaScript</h1>
   <p class="className">Some text</p>
 
-  <button class="button az_click_button00" type="button" onclick="button00()">
+  <button class="button az_{'spec':'event','type':'click','name':'button00'}" type="button" onclick="button00()">
     Button 00
   </button>
-  <button class="button az_click_button01" type="button"">Button 01</button>
+  <button class="button az_{'spec':'event','type':'click','name':'button01'}" type="button"">Button 01</button>
     
-    <input class=" checkbox az_change_checkbox00_1" type="checkbox" onchange="checkBox00()" />
-  <input class="checkbox az_change_checkbox01" type="checkbox" />
+    <input class=" checkbox az_{'spec':'event','type':'change','name':'checkbox00'}" type="checkbox"
+    onchange="checkBox00()" />
+  <input class="checkbox az_{'spec':'event','type':'change','name':'checkbox01'}" type="checkbox" />
 
-  <input class="inputText az_input_input00" type="text" oninput="inputText00()" />
-  <input class="inputText az_input_input01_2" type="text" />
+  <input class="inputText az_{'spec':'event','type':'input','name':'checkbox01'}" type="text" oninput="inputText00()" />
+  <input class="inputText az_{'spec':'event','type':'input','name':'checkbox01'}" type="text" />
 
-  <select class="az_change_select00_3" onchange="change00(value)">
+  <select class="az_{'spec':'event','type':'change','name':'select00_3'}" onchange="change00(value)">
     <option value="volvo">Volvo</option>
     <option value="saab">Saab</option>
     <option value="mercedes">Mercedes</option>
@@ -66,7 +67,7 @@
   </select>
 
 
-  <p class="demo az_{'type':'topic','name':'p: utAzTopic_abc_4'}" style="cursor: pointer">
+  <p class="demo az_{'spec':'topic','name':'p: utAzTopic_abc_4'}" style="cursor: pointer">
     utAzTopic_abc_4</p>
 
 </body>

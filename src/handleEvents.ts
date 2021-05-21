@@ -32,27 +32,20 @@ export const handleEvents: Function = (event: Event, props: Props): void => {
         const topicClassNamesArrMapped =
           topicClassNamesArr &&
           topicClassNamesArr.map(topicClassName =>
-            getParsedAzClassToObj({ str: topicClassName, prefic: 'az_' })
+            getParsedAzClassToObj({ str: topicClassName, prefix: 'az_' })
           )
 
-        console.info('handleEvents [36]', {
-          data,
-          topicClassNamesArr,
-          topicClassNamesArrMapped,
-        })
-
-        topicClassNamesArr &&
+        topicClassNamesArrMapped &&
           topicClassNamesArrMapped.forEach(topicIn => {
-            const { type, ...topic }: any = topicIn
+            const { spec, ...topic }: any = topicIn
 
-            console.info('handleEvents [44]', { data })
-
-            dispatch(
-              action.SAVE_ANALYTICS.REQUEST({
-                type,
-                topic: { ...topic, pathname },
-              })
-            )
+            spec === 'topic' &&
+              dispatch(
+                action.SAVE_ANALYTICS.REQUEST({
+                  spec,
+                  topic: { ...topic, pathname },
+                })
+              )
           })
       }
     },

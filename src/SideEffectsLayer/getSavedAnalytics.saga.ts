@@ -7,19 +7,23 @@ import { IAnalyticsInput } from '../Interfaces/IAnalyticsInput'
 import { getSavedAnalyticsConnector } from '../ComminicationLayer/getSavedAnalytics.connector'
 import * as action from '../DataLayer/index.action'
 
+interface IData extends IAnalyticsInput {
+  spec: string
+}
+
 interface IGetSavedAnalytics {
   type: string
-  data: IAnalyticsInput
+  data: IData
 }
 
 function* getSavedAnalytics(payload: IGetSavedAnalytics) {
   const {
-    data: { type, initData, topic, event, target },
+    data: { spec, initData, topic, event, target },
   } = payload
 
   const { analyticsID: analyticsIDStore } = yield select(store => store)
   console.info('getSavedAnalytics.saga [21]', {
-    type,
+    spec,
     initData,
     topic,
     event,
@@ -35,10 +39,10 @@ function* getSavedAnalytics(payload: IGetSavedAnalytics) {
     } = getSavedAnalyticsConnector({
       ...(analyticsIDStore &&
         analyticsIDStore !== 'null' && { analyticsID: analyticsIDStore }),
-      ...(type === 'initData' && { initData }),
-      ...(type === 'topic' && { topic }),
-      ...(type === 'event' && { event }),
-      ...(type === 'target' && { target }),
+      ...(spec === 'initData' && { initData }),
+      ...(spec === 'topic' && { topic }),
+      ...(spec === 'event' && { event }),
+      ...(spec === 'target' && { target }),
     })
 
     const {

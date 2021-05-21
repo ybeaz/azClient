@@ -14,7 +14,6 @@ export interface ITopic {
 }
 
 export interface IEvent {
-  type: string
   name: string
   value: string
   pathname: string
