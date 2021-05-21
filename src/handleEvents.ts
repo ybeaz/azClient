@@ -29,10 +29,11 @@ export const handleEvents: Function = (event: Event, props: Props): void => {
           eventTarget.closest('[class*="az_"]').className
         const topicClassNamesArr = topicClassNames.match(/az_[\s\S]*?}/g)
 
-        const topicClassNamesArrMapped = topicClassNamesArr.map(
-          topicClassName =>
+        const topicClassNamesArrMapped =
+          topicClassNamesArr &&
+          topicClassNamesArr.map(topicClassName =>
             getParsedAzClassToObj({ str: topicClassName, prefic: 'az_' })
-        )
+          )
 
         console.info('handleEvents [36]', {
           data,
@@ -40,18 +41,19 @@ export const handleEvents: Function = (event: Event, props: Props): void => {
           topicClassNamesArrMapped,
         })
 
-        topicClassNamesArrMapped.forEach(topicIn => {
-          const { type, ...topic }: any = topicIn
+        topicClassNamesArr &&
+          topicClassNamesArrMapped.forEach(topicIn => {
+            const { type, ...topic }: any = topicIn
 
-          console.info('handleEvents [44]', { data })
+            console.info('handleEvents [44]', { data })
 
-          dispatch(
-            action.SAVE_ANALYTICS.REQUEST({
-              type,
-              topic: { ...topic, pathname },
-            })
-          )
-        })
+            dispatch(
+              action.SAVE_ANALYTICS.REQUEST({
+                type,
+                topic: { ...topic, pathname },
+              })
+            )
+          })
       }
     },
 
