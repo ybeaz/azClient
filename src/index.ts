@@ -1,55 +1,26 @@
 import { v4 as uuidv4 } from 'uuid'
 
+import { cookie } from './Shared/cookie'
+import { getArrToSave } from './Shared/getArrToSave'
+import { filterArrObjFirst } from './Shared/filterArrObjFirst'
+import { handleEvents } from './handleEvents'
 import * as action from './DataLayer/index.action'
 import { store } from './DataLayer/store'
-import * as serviceFunc from './Shared/serviceFunc'
-import * as Interfaces from './Shared/interfaces'
-
-/**
- * @description Block for defining endpoint (dev, prod mode)
- */
-const { href, hostname, pathname, search } = location
-const endpoint: string = serviceFunc.getEndpoint(location)
 
 /**
  * @description Block for starting a session and collecting an initial data
  */
-let utAnltSid: string = serviceFunc.Cookie.get('utAnltSid')
-if (utAnltSid === undefined) {
-  utAnltSid = uuidv4()
-  serviceFunc.Cookie.set('utAnltSid', utAnltSid, {
-    domain: hostname,
-    days: 0.5,
-  })
-}
-const { width, height } = serviceFunc.mediaSizeCrossBrowser(global)
-const { referrer } = document
-const target: any[] = [{ level: 0, name: 'start' }] // [JSON.stringify({ level: 0, name: 'start' })]
-const initData: any[] = [
-  { width, height, search, pathname, hostname, href, referrer },
-]
-const data: any = { endpoint, utAnltSid, target, initData }
-store.dispatch(action.UPDATE_USER_FOOTPRINT(data))
-setTimeout(() => {
-  const data: any = {
-    endpoint,
-    operationName: 'SaveAnalytics',
-    variables: {
-      webAnalytics: {
-        hash256: '',
-        initData,
-      },
-    },
-    query:
-      'mutation SaveAnalytics($analyticsInput: AnalyticsInput!){saveAnalytics(analyticsInput: $analyticsInput){ analyticsID, hash256, dateCreate, dateUpdate, initData { ...InitDataAll } }} fragment InitDataAll on InitData { width, height, search, pathname, hostname, href, referrer }',
-  }
+// let utAnltSid: string = cookie.get('utAnltSid')
+// if (utAnltSid === undefined) {
+//   utAnltSid = uuidv4()
+//   cookie.set('utAnltSid', utAnltSid, {
+//     domain: hostname,
+//     days: 0.5,
+//   })
+// }
 
-  console.info('index [46]', {
-    action: action.SAVE_ANALYTICS.REQUEST(data),
-  })
-  store.dispatch(action.SAVE_ANALYTICS.REQUEST(data))
-  // const storeSlip: object = store.getState()
-  // console.info('index->start session [0] ', { payload, storeSlip, data })
+setTimeout(() => {
+  handleEvents({}, { typeEvent: 'SAVE_INIT_DATA' })
 }, 50)
 
 /**
@@ -67,11 +38,11 @@ setInterval(() => {
   //   const topicClassNames: string = eventTarget.closest('[class*="utAzTopic_"]').className
   //   const topic: string = topicClassNames.replace(/^([\s\S]*?)(utAzTopic_[\S]*?)($|\s[\s\S]*?)$/gim, '$2')
   //     .replace(/^(utAzTopic_)([\S]*?)$/gim, '$2')
-  //   // serviceFunc.saveUserVisitActions({ target: 'looking', topic })
+  //   saveUserVisitActions({ target: 'looking', topic })
   //   // console.info('index.js', { topic })
   //   const { topics: record } = store.getState().userFootprint
   //   const topics: string[] = [topic]
-  //   const topicsNext: string[] = serviceFunc.getArrToSave(record, topics, 'add', '', '')
+  //   const topicsNext: string[] = getArrToSave(record, topics, 'add', '', '')
   //   store.dispatch(actions.UPDATE_USER_FOOTPRINT({ topics: topicsNext }))
   //   /*
   //   setTimeout(() => {
@@ -96,9 +67,9 @@ setTimeout(() => {
   //     val = event.target.checked
   //   }
   //   let eventDataNext: any[] = [{ eventClass, tag: localName, val }]
-  //   eventDataNext = serviceFunc.filterArrObjFirst(eventDataNext, 'eventClass')
+  //   eventDataNext = filterArrObjFirst(eventDataNext, 'eventClass')
   //   // console.info('index.js [3]', { eventDataNext, eventDataPrev })
-  //   eventDataNext = serviceFunc.getArrToSave(eventDataPrev, eventDataNext, 'add', '', 'eventClass')
+  //   eventDataNext = getArrToSave(eventDataPrev, eventDataNext, 'add', '', 'eventClass')
   //   // console.info('index.js [4]', { eventDataNext, eventDataPrev })
   //   // Block for target
   //   const { level } = targetPrev[0] // JSON.parse(target[0])

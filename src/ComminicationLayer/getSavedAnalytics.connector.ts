@@ -1,24 +1,40 @@
-// import { SERVERS } from '../Constants/servers.const'
-// import { PATH_NAME_LOADED_VARS } from '../Constants/pathNameLoadedVars.const'
-// import { getDetectedEnv } from '../Shared/getDetectedEnv'
+import { IAnalyticsInput } from '../Interfaces/IAnalyticsInput'
+import { SERVERS } from '../Constants/servers.const'
+import { getDetectedEnv } from '../Shared/getDetectedEnv'
+import { getAssetHash } from '../Shared/getAssetHash'
 
-// const headers = {
-//   'Access-Control-Allow-Origin': '*',
-//   'Content-Type': 'application/json',
-//   timestamp: +new Date(),
-// }
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Content-Type': 'application/json',
+  timestamp: +new Date(),
+}
 
-// export const getSavedAnalytics: Function = (): any => {
-//   const envType = getDetectedEnv()
-//   // console.info('getContentInfo.connector [15]', { envType })
-//   const obj: any = {
-//     testCapture: 'should return 200 code and data defined',
-//     method: 'get',
-//     options: { headers: { ...headers } },
-//     url: <string>(
-//       `${SERVERS[envType]}${PATH_NAME_LOADED_VARS[envType]}/contentInfo.json`
-//     ),
-//   }
+export const getSavedAnalyticsConnector: Function = (
+  props: IAnalyticsInput
+): any => {
+  const hash256 = getAssetHash(props)
+  const envType = getDetectedEnv()
 
-//   return obj
-// }
+  const obj: any = {
+    testCapture: 'should return 200 code and data defined',
+    method: 'post',
+    url: <string>`${SERVERS[envType]}/graphql`,
+    options: { headers: { ...headers } },
+    payload: {
+      operationName: 'SaveAnalytics',
+      variables: {
+        analyticsInput: {
+          hash256,
+          ...(props.initData && { initData: props.initData }),
+          ...(props.topic && { topic: props.topic }),
+          ...(props.event && { event: props.event }),
+          ...(props.target && { target: props.target }),
+        },
+      },
+      query:
+        'mutation SaveAnalytics($analyticsInput: AnalyticsInput!){saveAnalytics(analyticsInput: $analyticsInput){ analyticsID, hash256, dateCreate, dateUpdate }}',
+    },
+  }
+
+  return obj
+}

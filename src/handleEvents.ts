@@ -1,6 +1,6 @@
 import { store } from './DataLayer/store'
 import * as action from './DataLayer/index.action'
-
+import { mediaSizeCrossBrowser } from './Shared/mediaSizeCrossBrowser'
 interface Props {
   typeEvent: string
   type?: string
@@ -13,10 +13,24 @@ export const handleEvents: Function = (event: Event, props: Props): void => {
   const { dispatch } = store
 
   const output = {
-    // TOGGLE_MEDIA_LOADED: () => {
-    //   const { mediaKey, isMediaLoaded } = data
-    //   dispatch(action.TOGGLE_MEDIA_LOADED({ mediaKey, isMediaLoaded }))
-    // },
+    SAVE_INIT_DATA: () => {
+      const { href, hostname, pathname, search } = location
+      const { width, height } = mediaSizeCrossBrowser(global)
+      const { referrer } = document
+
+      const initData: any = {
+        width,
+        height,
+        search,
+        pathname,
+        hostname,
+        href,
+        referrer,
+      }
+      const data: any = { initData }
+
+      dispatch(action.SAVE_ANALYTICS.REQUEST(data))
+    },
   }
 
   output[type]

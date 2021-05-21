@@ -1,4 +1,5 @@
-import * as serviceFunc from '../Shared/serviceFunc'
+import { serialize } from '../Shared/serialize'
+import { devModeTrueFalse } from '../Shared/devModeTrueFalse'
 
 export const fetchPost: Function = (endpoint: string, payload: any): any => {
   // console.info('fetch.js->fetchPost [5]', { endpointPayload, payload })
@@ -9,7 +10,8 @@ export const fetchPost: Function = (endpoint: string, payload: any): any => {
     cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
     credentials: 'omit', //(devModeTrueFalse() ? 'omit' : 'include'), // include, *same-origin, omit
     headers: {
-      Accept: 'application/json, application/x-www-form-urlencoded, text/plain, */*',
+      Accept:
+        'application/json, application/x-www-form-urlencoded, text/plain, */*',
       'access-control-allow-origin': '.userto.com',
       //'access-control-allow-headers': 'content-type, access-control-allow-origin, access-control-allow-methods, content-type',
       'content-type': 'application/json',
@@ -22,8 +24,7 @@ export const fetchPost: Function = (endpoint: string, payload: any): any => {
 }
 
 export const fetchGet: Function = (endpoint: string, payload: any): any => {
-
-  const payloadString: string = serviceFunc.serialize(payload, '')
+  const payloadString: string = serialize(payload, '')
   const endpointPayload: string = `${endpoint}?jsonp=none&${payloadString}`
   // console.info('fetch.js->fetchGet [5]', { credentials: (devModeTrueFalse() ? 'omit' : 'include'), devModeTrueFalse: devModeTrueFalse(), endpointPayload, payload })
 
@@ -33,7 +34,8 @@ export const fetchGet: Function = (endpoint: string, payload: any): any => {
     cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
     credentials: 'omit', // (devModeTrueFalse() ? 'omit' : 'include'), // include, *same-origin, omit  //Should include to preserve PHPSESSID
     headers: {
-      Accept: 'application/json, application/x-www-form-urlencoded, text/plain, */*',
+      Accept:
+        'application/json, application/x-www-form-urlencoded, text/plain, */*',
       'access-control-allow-origin': '.userto.com',
       'Content-Type': 'application/x-www-form-urlencoded',
       // 'Content-Type': 'application/x-www-form-urlencoded', text/plain, application/json
