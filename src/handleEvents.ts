@@ -62,6 +62,7 @@ export const handleEvents: Function = (event: Event, props: Props): void => {
 
     SAVE_INIT_DATA: () => {
       let analyticsID: string = cookie.get(COOKIE_ANALYTICSID_NAME)
+
       if (analyticsID && analyticsID !== 'null') {
         dispatch(action.SAVE_ANALYTICS.SUCCESS({ analyticsID }))
         cookie.set(COOKIE_ANALYTICSID_NAME, analyticsID, {
@@ -82,7 +83,7 @@ export const handleEvents: Function = (event: Event, props: Props): void => {
           href,
           referrer,
         }
-        const data: any = { type: 'initData', initData }
+        const data: any = { spec: 'initData', initData }
 
         dispatch(action.SAVE_ANALYTICS.REQUEST(data))
       }

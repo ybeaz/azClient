@@ -22,13 +22,6 @@ function* getSavedAnalytics(payload: IGetSavedAnalytics) {
   } = payload
 
   const { analyticsID: analyticsIDStore } = yield select(store => store)
-  console.info('getSavedAnalytics.saga [21]', {
-    spec,
-    initData,
-    topic,
-    event,
-    target,
-  })
 
   try {
     const {
