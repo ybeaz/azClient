@@ -5,6 +5,7 @@ import { cookie } from './Shared/cookie'
 import { mediaSizeCrossBrowser } from './Shared/mediaSizeCrossBrowser'
 import { getParsedAzClassToObj } from './Shared/getParsedAzClassToObj'
 import { COOKIE_ANALYTICSID_NAME } from './Constants/cookieAnalyticsIDName'
+import { EventHandler } from 'react'
 
 interface Props {
   typeEvent: string
@@ -12,52 +13,71 @@ interface Props {
   data: any
 }
 
-export const handleEvents: Function = (event: Event, props: Props): void => {
+export const handleEvents: Function = (event: any, props: Props): void => {
   const { type: typeStore, typeEvent, data } = props
   const type = typeStore ? typeStore : typeEvent
   const { getState, dispatch } = store
   const { hostname, pathname } = location
 
   const output = {
-    SAVE_TARGET: () => {},
+    ATTACH_EVENTS_TO_ELEMENTS: () => {
+      document
+        .querySelectorAll(`[class*="${ANALYTICS_PREFIX}"]`)
+        .forEach((eventElem, i) => {
+          const pattern = `${ANALYTICS_PREFIX}[\\s\\S]*?}`
+          const re = new RegExp(pattern, 'g')
+          const eventClassNamesArr = eventElem.className.match(re)
 
-    SAVE_ACTION: () => {},
+          const eventClassNamesArrMapped =
+            eventClassNamesArr &&
+            eventClassNamesArr.map(topicClassName =>
+              getParsedAzClassToObj({
+                str: topicClassName,
+                prefix: ANALYTICS_PREFIX,
+              })
+            )
 
-    SAVE_TOPIC: () => {
-      const { eventTarget } = data
-      if (
-        eventTarget &&
-        eventTarget.closest(`[class*="${ANALYTICS_PREFIX}"]`)
-      ) {
-        const topicClassNames: string = eventTarget.closest(
-          `[class*="${ANALYTICS_PREFIX}"]`
-        ).className
-        const pattern = `${ANALYTICS_PREFIX}[\\s\\S]*?}`
-        const re = new RegExp(pattern, 'g')
-        const topicClassNamesArr = topicClassNames.match(re)
-
-        const topicClassNamesArrMapped =
-          topicClassNamesArr &&
-          topicClassNamesArr.map(topicClassName =>
-            getParsedAzClassToObj({
-              str: topicClassName,
-              prefix: ANALYTICS_PREFIX,
+          eventClassNamesArrMapped &&
+            eventClassNamesArrMapped.forEach(eventIn => {
+              const { type }: any = eventIn
+              type &&
+                eventElem.addEventListener(type, event =>
+                  handleEvents(event, {
+                    typeEvent: 'SAVE_EVENT',
+                    data: eventIn,
+                  })
+                )
             })
-          )
+        })
+    },
 
-        topicClassNamesArrMapped &&
-          topicClassNamesArrMapped.forEach(topicIn => {
-            const { spec, ...topic }: any = topicIn
+    SAVE_EVENT: () => {
+      let analyticsID: string = cookie.get(COOKIE_ANALYTICSID_NAME)
+      const { type, name, value: valueIn, level } = data
+      console.info('handleEvents [24]', {
+        analyticsID,
+        event,
+        name,
+        value: valueIn || event?.target?.value,
+        valueIn,
+        'event.target.value': event?.target?.value,
+        level,
+        pathname,
+      })
 
-            spec === 'topic' &&
-              dispatch(
-                action.SAVE_ANALYTICS.REQUEST({
-                  spec,
-                  topic: { ...topic, pathname },
-                })
-              )
-          })
+      const dataNext: any = {
+        event: {
+          type,
+          ...(name && { name }),
+          ...((valueIn || event?.target?.value) && {
+            value: valueIn || event?.target?.value,
+          }),
+          ...(level && { level }),
+          pathname,
+        },
       }
+
+      dispatch(action.SAVE_ANALYTICS.REQUEST(dataNext))
     },
 
     SAVE_INIT_DATA: () => {
@@ -74,18 +94,19 @@ export const handleEvents: Function = (event: Event, props: Props): void => {
         const { width, height } = mediaSizeCrossBrowser(global)
         const { referrer } = document
 
-        const initData: any = {
-          width,
-          height,
-          search,
-          pathname,
-          hostname,
-          href,
-          referrer,
+        const dataNext: any = {
+          initData: {
+            width,
+            height,
+            search,
+            pathname,
+            hostname,
+            href,
+            referrer,
+          },
         }
-        const data: any = { spec: 'initData', initData }
 
-        dispatch(action.SAVE_ANALYTICS.REQUEST(data))
+        dispatch(action.SAVE_ANALYTICS.REQUEST(dataNext))
       }
     },
   }

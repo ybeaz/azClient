@@ -32,10 +32,8 @@ function* getSavedAnalytics(payload: IGetSavedAnalytics) {
     } = getSavedAnalyticsConnector({
       ...(analyticsIDStore &&
         analyticsIDStore !== 'null' && { analyticsID: analyticsIDStore }),
-      ...(spec === 'initData' && { initData }),
-      ...(spec === 'topic' && { topic }),
-      ...(spec === 'event' && { event }),
-      ...(spec === 'target' && { target }),
+      ...(initData && { initData }),
+      ...(event && { event }),
     })
 
     const {
