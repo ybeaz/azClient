@@ -54,17 +54,6 @@ export const handleEvents: Function = (event: any, props: Props): void => {
     SAVE_EVENT: () => {
       let analyticsID: string = cookie.get(COOKIE_ANALYTICSID_NAME)
       const { type, name, value: valueIn, level } = data
-      console.info('handleEvents [24]', {
-        analyticsID,
-        event,
-        name,
-        value: valueIn || event?.target?.value,
-        valueIn,
-        'event.target.value': event?.target?.value,
-        level,
-        pathname,
-      })
-
       const dataNext: any = {
         event: {
           type,

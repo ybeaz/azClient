@@ -11,7 +11,7 @@ import path from 'path'
 
 export const common = {
   entry: {
-    yr: ['./src/index.ts'],
+    az: ['./src/index.ts'],
   },
   output: {
     path: path.resolve(__dirname, '../dist'),
@@ -112,7 +112,6 @@ export const common = {
   externals: [{ pg: true }],
   node: { fs: 'empty' },
   optimization: {
-    nodeEnv: 'production',
     flagIncludedChunks: true,
     sideEffects: true,
     usedExports: true,

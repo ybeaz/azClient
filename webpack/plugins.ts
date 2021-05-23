@@ -1,5 +1,7 @@
 import webpack from 'webpack'
 
+import CompressionPlugin from 'compression-webpack-plugin'
+import DuplicatePackageCheckerPlugin from 'duplicate-package-checker-webpack-plugin'
 import ESLintPlugin from 'eslint-webpack-plugin'
 import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
@@ -8,29 +10,38 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import WebpackNotifierPlugin from 'webpack-notifier'
 
-export const commonPlugins = [
-  new webpack.ProvidePlugin({
-    React: 'react',
-    'react-dom': 'ReactDOM',
-  }),
+export const commonPlugins = []
+
+export const prodPlugins = [
+  new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
   new webpack.DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify('production'),
+    // <-- key to reducing React's size
+    'process.env': {
+      NODE_ENV: JSON.stringify('production'),
+    },
   }),
+  new DuplicatePackageCheckerPlugin(),
+  new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
+  new CleanWebpackPlugin({
+    cleanOnceBeforeBuildPatterns: [],
+  }),
+  new CompressionPlugin({
+    algorithm: 'gzip',
+    test: /\.js$|\.css$|\.html$/,
+  }),
+]
+
+export const devPlugins = [
   new BundleAnalyzerPlugin({
     analyzerMode: 'disabled',
     generateStatsFile: true,
     statsOptions: { source: false },
   }),
-  new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
   new ForkTsCheckerWebpackPlugin(),
-  new CleanWebpackPlugin({
-    cleanOnceBeforeBuildPatterns: [],
+  new webpack.ProvidePlugin({
+    React: 'react',
+    'react-dom': 'ReactDOM',
   }),
-]
-
-export const prodPlugins = []
-
-export const devPlugins = [
   new WebpackNotifierPlugin({
     title: function (params) {
       return `Build status is ${params.status} with message ${params.message}`

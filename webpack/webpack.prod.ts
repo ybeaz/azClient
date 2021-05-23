@@ -1,12 +1,12 @@
 import { common } from './webpack.common'
 //https://stackoverflow.com/questions/49053215/webpack-4-how-to-configure-minimize
 import TerserPlugin from 'terser-webpack-plugin'
-import { commonPlugins, devPlugins } from './plugins'
+import { commonPlugins, prodPlugins } from './plugins'
 
 export default {
   ...common,
   mode: 'production',
-  devtool: 'source-map',
+  devtool: 'none',
   optimization: {
     nodeEnv: 'production',
     flagIncludedChunks: true,
@@ -42,5 +42,5 @@ export default {
     removeEmptyChunks: true,
     mergeDuplicateChunks: true,
   },
-  plugins: [...commonPlugins, ...devPlugins],
+  plugins: [...commonPlugins, ...prodPlugins],
 }
