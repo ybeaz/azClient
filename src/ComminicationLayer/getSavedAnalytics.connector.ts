@@ -14,11 +14,12 @@ export const getSavedAnalyticsConnector: Function = (
 ): any => {
   const hash256 = getAssetHash(props)
   const envType = getDetectedEnv()
+  const url = <string>`${SERVERS[envType]}/graphql`
 
   const obj: any = {
     testCapture: 'should return 200 code and data defined',
     method: 'post',
-    url: <string>`${SERVERS[envType]}/graphql`,
+    url,
     options: { headers: { ...headers } },
     payload: {
       operationName: 'SaveAnalytics',
