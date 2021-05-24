@@ -8,20 +8,11 @@ export interface IInitData {
   referrer: string
 }
 
-export interface ITopic {
-  name: string
-  pathname: string
-}
-
 export interface IEvent {
+  type: string
   name: string
   value: string
-  pathname: string
-}
-
-export interface ITarget {
   level: number
-  name: string
   pathname: string
 }
 
@@ -30,7 +21,5 @@ export interface IAnalyticsInput {
   hash256?: string
   type?: string
   initData?: IInitData
-  topic?: ITopic
   event?: IEvent
-  target?: ITarget
 }

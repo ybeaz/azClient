@@ -28,9 +28,7 @@ export const getSavedAnalyticsConnector: Function = (
           ...(props.analyticsID && { analyticsID: props.analyticsID }),
           hash256,
           ...(props.initData && { initData: props.initData }),
-          ...(props.topic && { topic: props.topic }),
           ...(props.event && { event: props.event }),
-          ...(props.target && { target: props.target }),
         },
       },
       query:

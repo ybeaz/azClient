@@ -2,7 +2,10 @@
  * @description Function to return obj reduced to arr fields
  * @borrows both server and client
  */
-export const arrReduceObjPropsConsistent = (obj, arr) => {
+export const arrReduceObjPropsConsistent: Function = (
+  obj: any,
+  arr: any[]
+): any => {
   if (!obj) {
     return {}
   }
@@ -10,7 +13,6 @@ export const arrReduceObjPropsConsistent = (obj, arr) => {
   let objNext = {}
   let consistency = true
   arr.forEach(item => {
-    // console.info('arrReduceObjPropsConsistent [5]', { consistency, item, 'obj[item]': obj[item], 'typeof': typeof obj[item] !== 'undefined' })
     if (consistency && obj[item] !== undefined) {
       objNext[item] = obj[item]
     } else {

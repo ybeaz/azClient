@@ -18,7 +18,7 @@ interface IGetSavedAnalytics {
 
 function* getSavedAnalytics(payload: IGetSavedAnalytics) {
   const {
-    data: { spec, initData, topic, event, target },
+    data: { initData, event },
   } = payload
 
   const { analyticsID: analyticsIDStore } = yield select(store => store)
