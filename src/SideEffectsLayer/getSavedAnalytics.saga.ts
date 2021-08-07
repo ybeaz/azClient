@@ -7,13 +7,9 @@ import { IAnalyticsInput } from '../Interfaces/IAnalyticsInput'
 import { getSavedAnalyticsConnector } from '../ComminicationLayer/getSavedAnalytics.connector'
 import * as action from '../DataLayer/index.action'
 
-interface IData extends IAnalyticsInput {
-  spec: string
-}
-
 interface IGetSavedAnalytics {
   type: string
-  data: IData
+  data: IAnalyticsInput
 }
 
 function* getSavedAnalytics(payload: IGetSavedAnalytics) {

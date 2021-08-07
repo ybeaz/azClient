@@ -121,7 +121,7 @@
     "prettier.endOfLine": "auto",
     "html.format.unformatted": "",
     "html.format.contentUnformatted": "",
-    "workbench.editorAssociations": [],
+    "workbench.editorAssociations": {},
     "task.slowProviderWarning": false,
     "vsintellicode.features.python.deepLearning": "enabled",
     "python.analysis.typeCheckingMode": "basic",

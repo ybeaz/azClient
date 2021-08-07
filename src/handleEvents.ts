@@ -5,7 +5,6 @@ import { cookie } from './Shared/cookie'
 import { mediaSizeCrossBrowser } from './Shared/mediaSizeCrossBrowser'
 import { getParsedAzClassToObj } from './Shared/getParsedAzClassToObj'
 import { COOKIE_ANALYTICSID_NAME } from './Constants/cookieAnalyticsIDName'
-import { EventHandler } from 'react'
 
 interface Props {
   typeEvent: string
